@@ -65,9 +65,10 @@
     background-color: #f2f2f2;
     border: 1px solid #ddd;
     padding: 8px;
-    text-align: center; /* Center the heading table - Ravo */
+    text-align: center;
+    /* Center the heading table - Ravo */
     height: 15px;
-        /* Définissez la hauteur de l'entête */
+    /* Définissez la hauteur de l'entête */
 }
 
 /* Start Ravo Modification */
@@ -86,6 +87,7 @@
 .body-bg .container .my_col {
     margin: 0;
 }
+
 /* Screen SM */
 @media (min-width: 568px) {
     .body-bg main#main .my_row .my_col #header div {
@@ -93,16 +95,19 @@
         padding: 0 20px;
     }
 }
+
 /* Screen MD */
 @media (min-width: 768px) {
     .body-bg main#main {
         padding: 50px 0 !important;
     }
+
     .body-bg main#main .my_row .my_col #header div {
         font-size: 1.4rem;
         padding: 0 32px;
     }
 }
+
 /* Screen L */
 @media (min-width: 1024px) {
     .body-bg main#main .my_row .my_col #header div {
@@ -110,6 +115,7 @@
         padding: 0 43px;
     }
 }
+
 /* Screen XL*/
 @media (min-width: 1280px) {
     .body-bg main#main .my_row .my_col #header div {
@@ -117,6 +123,7 @@
         padding: 0 70px;
     }
 }
+
 /* Screen XXL */
 @media (min-width: 1920px) {
     .body-bg main#main .my_row .my_col #header div {
@@ -124,6 +131,7 @@
         padding: 0 100px;
     }
 }
+
 /* Screen XXXL */
 @media (min-width: 2560px) {
     .body-bg main#main .my_row .my_col #header div {
@@ -131,21 +139,28 @@
         padding: 0 140px;
     }
 }
+
 /* End Responsive 'user_info'*/
 
 /* Start Responsive 'table-excel'*/
-td select[name="project_id"], td select[name="task"], td select[name="labels"] {
+td select[name="project_id"],
+td select[name="task"],
+td select[name="labels"] {
     width: 100%;
 }
+
 /* Screen SM */
 @media (min-width: 568px) {
+
     /* Size of the date input column */
     td input[name="date"] {
         width: 90%;
     }
 }
+
 /* Screen L */
 @media (min-width: 1024px) and (max-width: 1280px) {
+
     /* Size of the table_excel */
     /* .table-excel {
         width: 80%;
@@ -155,6 +170,7 @@ td select[name="project_id"], td select[name="task"], td select[name="labels"] {
         width: 80%;
     }
 }
+
 /* Screen XXL */
 @media (min-width: 1920px) {
     /* Size of select 'project_id', 'task' and 'label' */
@@ -166,13 +182,22 @@ td select[name="project_id"], td select[name="task"], td select[name="labels"] {
 /* End Responsive 'table-excel'*/
 /* End Page Saisie de temps */
 
+/* Start Saisie de temps admin */
+/* Space-between my_col */
+#main .my_row .my_row .my_col {
+    padding: 0 4rem;
+}
+
+/* End Saisie de temps admin */
+
 /* End Ravo Modification */
 
 /* Style des cellules */
 .table-excel td {
     border: 1px solid #ddd;
     padding: 8px;
-    /* max-width: 150px; */ /*Max-size of all the 'table-excel' to regul it individually - Ravo*/
+    /* max-width: 150px; */
+    /*Max-size of all the 'table-excel' to regul it individually - Ravo*/
     /* Taille maximale des cellules */
     overflow: hidden;
     /* Empêche le contenu de déborder */
@@ -198,12 +223,12 @@ td select[name="project_id"], td select[name="task"], td select[name="labels"] {
     display: flex;
     flex-direction: row;
     background-color: #f0f0f0;
-        /* Couleur de fond */
+    /* Couleur de fond */
     padding: 10px;
-        /* Espacement intérieur */
+    /* Espacement intérieur */
     margin-bottom: 20px;
     margin-top: 20px;
-        /* Marge inférieure */
+    /* Marge inférieure */
 }
 
 #info-saisie p {
@@ -228,11 +253,11 @@ td select[name="project_id"], td select[name="task"], td select[name="labels"] {
     padding: 15px 20px;
     background-color: #f2f2f2;
     height: 80px;
-        /* Ajuster la hauteur du navbar */
+    /* Ajuster la hauteur du navbar */
 }
 
 .user-details {
-  /*  text-align: left; */
+    /*  text-align: left; */
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -258,7 +283,7 @@ td select[name="project_id"], td select[name="task"], td select[name="labels"] {
 
 .normal-size {
     font-size: 5px;
-        /* Taille de police typique pour un paragraphe */
+    /* Taille de police typique pour un paragraphe */
 }
 
 
@@ -269,13 +294,13 @@ td select[name="project_id"], td select[name="task"], td select[name="labels"] {
     font-family: Arial, sans-serif;
     /* Style de police identique */
     font-weight: 500;
-        /* Par exemple, une épaisseur de police moyenne */
+    /* Par exemple, une épaisseur de police moyenne */
 }
 
 .buttons {
     display: flex;
     align-items: center;
-  
+
 }
 
 .buttons a {

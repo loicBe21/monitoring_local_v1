@@ -51,7 +51,8 @@ defmodule PmLogin.MixProject do
       {:jason, "~> 1.2"},
       {:contex, git: "https://github.com/mindok/contex"},
       {:pbkdf2_elixir, "~> 2.0"},
-      {:plug_cowboy, "~> 2.5"} ,
+     # {:plug_cowboy, "~> 2.5"} ,
+      {:plug_cowboy, "~> 2.6"} ,  # ++ add this line
       {:csv, "~> 2.0"}
     ]
   end

@@ -13,7 +13,7 @@ defmodule PmLoginWeb.SaisieTemps.SaisieAdminPageLive do
     alias PmLogin.SaisieTemps
     alias PmLoginWeb.Router.Helpers, as: Routes
 
-    def mount(_params, %{"curr_user_id" => curr_user_id ,"start_date" => start_date , "end_date" => end_date , "status" => status , "right" => right}, socket) do
+    def mount(_params, %{"curr_user_id" => curr_user_id ,"start_date" => start_date , "end_date" => end_date , "status" => status , "right" => right , "username" => username}, socket) do
 
     today = Date.utc_today()
     current_user =  Login.get_user!(curr_user_id)
@@ -22,11 +22,12 @@ defmodule PmLoginWeb.SaisieTemps.SaisieAdminPageLive do
     end_date = Utilities.parse_date_string(end_date)
     right = String.to_integer(right)
     status = String.to_integer(status)
+    username =  username
     right_list = right_list()
     status_list = status_list()
     right_selected = Enum.find(right_list(), fn map -> map.id == right end)
     status_selected = Enum.find(status_list(), fn map -> map.id == status end)
-    IO.inspect right_selected
+    IO.inspect SaisieTemps.get_resum_saisie_by_params(start_date,end_date,right,status ,username)
 
   #  layout =
    #   case current_user.right_id do
@@ -45,7 +46,7 @@ defmodule PmLoginWeb.SaisieTemps.SaisieAdminPageLive do
           today: Utilities.simple_date_format1(today),
           date_today: today,
           projects: projects,
-          saisie_data: SaisieTemps.get_resum_saisie_by_params(start_date,end_date,right,status),
+          saisie_data: SaisieTemps.get_resum_saisie_by_params(start_date,end_date,right,status ,username),
           sorted_by_utilisateur:  false ,
           sorted_by_droit: false ,
           sorted_by_time_value: false ,
@@ -60,7 +61,9 @@ defmodule PmLoginWeb.SaisieTemps.SaisieAdminPageLive do
           right_selected: right_selected ,
           status_list: status_list ,
           status_selected: status_selected ,
-          show_notif: false
+          show_notif: false ,
+          username: username
+
         )
     {:ok, socket , layout: {PmLoginWeb.LayoutView, "saisie_layout.html"}}
   end
@@ -74,12 +77,13 @@ defmodule PmLoginWeb.SaisieTemps.SaisieAdminPageLive do
     end_date = socket.assigns.end_date
     right = socket.assigns.right
     status = socket.assigns.status
+    username = socket.assigns.username
     case SaisieTemps.save_saisie_validee(params) do
       {:ok ,_}
         ->
 
           {:noreply , socket
-         |>assign(saisie_data: SaisieTemps.get_resum_saisie_by_params(start_date, end_date , right , status))
+         |>assign(saisie_data: SaisieTemps.get_resum_saisie_by_params(start_date, end_date , right , status , username))
          }
         {:error , message}
         ->  {:noreply , socket
@@ -151,12 +155,13 @@ defmodule PmLoginWeb.SaisieTemps.SaisieAdminPageLive do
     end
   end
 
-  def handle_event("do_filtre", %{"start_date" => start_date, "end_date" => end_date, "status" => status, "right" => right}, socket) do
+  def handle_event("do_filtre", %{"start_date" => start_date, "end_date" => end_date, "status" => status, "right" => right , "username" => username}, socket) do
+    IO.inspect username
     start_date = Utilities.parse_date_string(start_date)
     end_date = Utilities.parse_date_string(end_date)
     right = String.to_integer(right)
     status = String.to_integer(status)
-    url = Routes.saisie_temps_path(socket, :index_admin1, start_date: Utilities.parse_date_to_html(start_date), end_date: Utilities.parse_date_to_html(end_date), status: status, right: right)
+    url = Routes.saisie_temps_path(socket, :index_admin1, start_date: Utilities.parse_date_to_html(start_date), end_date: Utilities.parse_date_to_html(end_date), status: status, right: right , username: username)
     IO.puts "makato"
    # {:noreply, socket
    #   |>assign(

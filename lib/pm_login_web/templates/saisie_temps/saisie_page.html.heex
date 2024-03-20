@@ -75,7 +75,7 @@
     <div class="my_col" >
         <%= if @current_user.right_id == 1 do %>
        <!-- <a href="/saisie_admin?start_date="> !-->
-        <a href ={Routes.saisie_temps_path(@socket, :index_admin1 , start_date: Utilities.parse_date_to_html(@date_today) , end_date: Utilities.parse_date_to_html(@ date_today), status: "0", right: "0" )}>
+        <a href ={Routes.saisie_temps_path(@socket, :index_admin1 , start_date: Utilities.parse_date_to_html(@date_today) , end_date: Utilities.parse_date_to_html(@ date_today), status: "0", right: "0"  , username: "")}>
             <p>Espace admin</p>
         </a>
     
@@ -101,9 +101,9 @@
                 <th style="width: 50px;">Date</th>
                 <th style="width: 50px;">Utilisateur</th>
                 <th style="width: 150px;"  >
-                    <a href="#" phx-click="sort" phx-value-sort=":project">Projet</a>
-                   
+                    <a href="#" phx-click="sort" phx-value-sort=":project">Projet</a>  
                 </th>
+                <th style="width: 50px;">Client</th>
                 <th style="width: 150px;">Tâche</th>
                 <th style="width: 200px;">Libellés</th>
                 <th style="width: 20px;">
@@ -118,7 +118,8 @@
                 <td><%= Utilities.simple_date_format(siaise.date_entries) %></td>
                 <td><%= siaise.username %></td>
                 <td><%= siaise.project_title %></td>
-                <td><%= siaise.task_title %></td>
+                <td><%= siaise.clients_name %></td>
+                <td><%= siaise.task_title %></td> 
                 <td><%= siaise.libele %></td>
                 <td><%= siaise.time_value %></td>
                 <td>
@@ -249,6 +250,9 @@
                         <% end %>
                     </select>
                 </td>
+                <td>
+                    <input type="text" name="client_name" value="" readonly>
+                </td>
                 <td class="task">
                     <select name="task"></select> <!-- Cette balise sera remplie avec les tâches associées au projet sélectionné -->
                 </td>
@@ -297,19 +301,28 @@
                 })
                 .then(data => {
                     // Mettre à jour la liste déroulante des tâches avec les données récupérées
+                    console.log(data)
                     const taskSelect = document.querySelector('select[name="task"]');
+                    const tasks = data.tasks;
                     taskSelect.innerHTML = ''; // Effacer les options précédentes
-                    data.forEach(task => {
+                    tasks.forEach(task => {
                         const option = document.createElement('option');
                         option.value = task.id;
                         option.textContent = task.title; // Assurez-vous que task a une propriété appropriée pour le titre
                         taskSelect.appendChild(option);
                     });
+                    // Traitement des détails clients
+                    const clientDetails = data.client_details;
+                    // Exemple d'utilisation des détails du client
+                    console.log('Nom du client:', clientDetails.clients_name);
+                    const clientNameInput = document.querySelector('input[name="client_name"]');
+                    clientNameInput.value = clientDetails.clients_name;
                 })
                 .catch(error => {
                     console.error('Erreur :', error);
                 });
         }
+
     });
 
    

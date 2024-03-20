@@ -5,6 +5,7 @@ defmodule PmLogin.SaisieTemps do
   #author loicRavelo05@gmail.com
 
 
+
   import Decimal
   import Ecto.Query, warn: false
   alias Hex.API.User
@@ -132,7 +133,8 @@ defmodule PmLogin.SaisieTemps do
     time_entries.*,
     users.username ,
     tasks.title as task_title ,
-    projects.title as project_title
+    projects.title as project_title ,
+    v_projects_clients_details.clients_name
     FROM
         time_entries
     JOIN
@@ -141,6 +143,8 @@ defmodule PmLogin.SaisieTemps do
         tasks ON tasks.id = time_entries.task_id
     JOIN
         projects ON projects.id = time_entries.project_id
+    JOIN
+        v_projects_clients_details on v_projects_clients_details.project_id = time_entries.project_id
     WHERE
          user_id = $1 and date_trunc('day', date_entries) = $2 ::date
     ORDER BY time_entries.inserted_at asc
@@ -282,10 +286,20 @@ defmodule PmLogin.SaisieTemps do
 
     end
 
+    defp username_condition(username) do
+      case username do
+         "" ->
+            " "
+         _ ->
+          " AND  auth.username ilike '%"<>username<>"%' "
+
+      end
+    end
+
 
     #retourne les saisie par parametre dynamique
 
-    def get_resum_saisie_by_params(start_date , end_date , right_id , status) do
+    def get_resum_saisie_by_params(start_date , end_date , right_id , status , username) do
 
       sql_query = "
       SELECT
@@ -310,7 +324,7 @@ defmodule PmLogin.SaisieTemps do
       LEFT JOIN time_entries_validee ON auth.id = time_entries_validee.user_id and generated_dates.date_trunc = time_entries_validee.date
       WHERE
       EXTRACT(ISODOW FROM generated_dates.date_trunc) BETWEEN 1 AND 5 -- Exclure samedi et dimanche (1=lundi, 2=mardi, ..., 7=dimanche)
-      AND auth.right_id != 4 and auth.right_id != 100 "<> right_id_conditions(right_id) <>"  "<> status_condition(status) <> "
+      AND auth.right_id != 4 and auth.right_id != 100 "<> right_id_conditions(right_id) <>"  "<> status_condition(status) <> " "<> username_condition(username) <> "
       GROUP BY
       generated_dates.date_trunc, auth.id, auth.username , time_entries_validee.inserted_at , auth.title , auth.right_id
       ORDER BY
@@ -403,6 +417,17 @@ defmodule PmLogin.SaisieTemps do
             # errreur
             {:error , "suppression echoué"}
         end
+    end
+
+
+    #PmLogin.SaisieTemps.get_client_details_by_rpoject(69)
+    #fonction pour avoir les information rattacher a un projet
+    #return les details en tant que map
+    def get_client_details_by_rpoject(project_id) do
+      sql_query =  "SELECT * FROM v_projects_clients_details WHERE project_id = $1"
+      params =  [project_id]
+      #extract l'entete du list car cette liste return tjr une element
+      hd(SqlUtilities.fetch_result(sql_query , params))
     end
 
 

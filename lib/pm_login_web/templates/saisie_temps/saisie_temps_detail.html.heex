@@ -2,33 +2,33 @@
         administrateur>></a></h3> !-->
 <div class="navbar">
     <div class="user-details">
-      
-  
+
+
         <h2><%= @user_saisie.username %></h2>
-        
-   
+
+
         <div class="user-info">
             <%= if @validation_line != nil  do %>
-             <span class="badge badge-green normal-size">Saisie validée</span>
+            <span class="badge badge-green normal-size">Saisie validée</span>
             <% else %>
             <span class="badge badge-orange normal-size">Non validée</span>
             <% end %>
-            <span >Date du saisie: <%= Utilities.french_date_format_by_date(@date_saisie_format_date) %> </span>
-            <span >Total heure(s): <%= @total_heure %> </span>
+            <span>Date du saisie: <%= Utilities.french_date_format_by_date(@date_saisie_format_date) %> </span>
+            <span>Total heure(s): <%= @total_heure %> </span>
             <span>Nombre de ligne(s) : <%= length(@my_saisie) %></span>
             <%= if @validation_line != nil  do %>
-            <span>Validé par : <%= @validation_line.user_validator %> </span>
-            <span>Date de  validation : <%= Utilities.simple_date_format_with_hours(@validation_line.inserted_at) %> </span>
+            <span>Validé par : <%= @validation_line.user_validator %> le <%= Utilities.simple_date_format_with_hours(@validation_line.inserted_at) %> </span>
+           
             <% end %>
         </div>
     </div>
     <div class="buttons">
         <%= if @validation_line != nil  do %>
-        <a href="#" class="btn btn-danger">annuler la validation</a>
+        <a href="#" class="btn btn-lg btn-danger">annuler la validation</a>
         <% else %>
-        <a href="#" class="btn btn-primary">validé</a>
+        <a href="#" class="btn btn-lg btn-primary">validé</a>
         <% end %>
-        <a href={Routes.saisie_temps_path(@socket, :index_admin1 , start_date: Utilities.parse_date_to_html(@start_date) , end_date: Utilities.parse_date_to_html(@end_date), status: @status, right: @right )}
+        <a href={Routes.saisie_temps_path(@socket, :index_admin1 , start_date: Utilities.parse_date_to_html(@start_date) , end_date: Utilities.parse_date_to_html(@end_date), status: @status, right: @right , username: @username )}
             class="btn btn-lg btn-secondary"><i class="bi bi-arrow-bar-left"></i>retour</a>
     </div>
 </div>
@@ -41,15 +41,18 @@
         <div id="header">
             <div id="user-info">Utilisateur : <span id="user-name"><%= @user_saisie.username %></span></div>
             <div id="user-info">Total heure(s): <span id="user-name"><%= @total_heure %></span></div>
-            <div id="current-date">Saisie du : <span id="current-date-value"><%= Utilities.french_date_format_by_date(@date_saisie_format_date) %></span></div>
-            <div id="current-date">Nombre de ligne(s)  : <span
-                    id="current-date-value"><%= length(@my_saisie) %></span></div>
+            <div id="current-date">Saisie du : <span
+                    id="current-date-value"><%= Utilities.french_date_format_by_date(@date_saisie_format_date) %></span>
+            </div>
+            <div id="current-date">Nombre de ligne(s) : <span id="current-date-value"><%= length(@my_saisie) %></span>
+            </div>
         </div>
     </div>
     <div class="my_col" style="text-align: right;"> <!-- Aligner à droite -->
-        <a href={Routes.saisie_temps_path(@socket, :index_admin1 , start_date: Utilities.parse_date_to_html(@start_date) , end_date: Utilities.parse_date_to_html(@end_date), status: @status, right: @right )} class="btn btn-lg btn-secondary"><i class="bi bi-arrow-bar-left"></i>retour</a>
+        <a href={Routes.saisie_temps_path(@socket, :index_admin1 , start_date: Utilities.parse_date_to_html(@start_date) , end_date: Utilities.parse_date_to_html(@end_date), status: @status, right: @right , username: @username )}
+            class="btn btn-lg btn-secondary"><i class="bi bi-arrow-bar-left"></i>retour</a>
     </div>
-    
+
 </div>
 
 <%= if @validation_line != nil  do %>
@@ -60,7 +63,7 @@
         <p><span class="label">Date de validation :</span>
             <%= Utilities.simple_date_format_with_hours(@validation_line.inserted_at) %></p>
     </div>
-   <!-- <button class="btn btn-lg btn-danger" phx-click="delete_validation_line" phx-value-validation_line_id={@validation_line.id}>Anuler la validation</button> !-->
+    <!-- <button class="btn btn-lg btn-danger" phx-click="delete_validation_line" phx-value-validation_line_id={@validation_line.id}>Anuler la validation</button> !-->
 </div>
 
 
@@ -71,50 +74,54 @@
 
 
 <div id="table-container" style="max-height: 500px; overflow-y: scroll; width: 100%; margin-top: 20px;">
-    
-        <table id="excel-table" class="table-excel">
-            <thead style="position: sticky; top: 0; z-index: 1; background-color: #fff;">
-                <tr>
-                    
-                    <th style="width: 50px;">Date</th>
-                    <th style="width: 50px;">Utilisateur</th>
-                    <th style="width: 150px;">
-                       Projet
 
-                    </th>
-                    <th style="width: 150px;">Tâche</th>
-                    <th style="width: 200px;">Libellés</th>
-                    <th style="width: 20px;">
-                       temps
-                    </th>
-                    <th style="width: 40px;">Actions</th>
-                </tr>
-            </thead>
-            <tbody id="record-table-body">
-                <%= for siaise <- @my_saisie do %>
-                <tr>
-                   
-                    <td><%= @date_saisie %></td>
-                    <td><%= siaise.username %></td>
-                    <td><%= siaise.project_title %></td>
-                    <td><%= siaise.task_title %></td>
-                    <td><%= siaise.libele %></td>
-                    <td><%= siaise.time_value %></td>
-                    <td>
-                        <%= if @is_already_validee == {false , nil } do %>
-                            <i title="modifier" class="bi bi-pencil" phx-click="edit_entrie" phx-value-entrie_id={siaise.id}></i> 
-                            <i title="Supprimer" class="bi bi-trash" phx-click="delete_entrie" phx-value-entrie_id={siaise.id} ></i> 
-                        <% else %>
-                             ---
-                        <% end %>
-                    </td>
-                </tr>
-                <% end %>
-                
-            </tbody>
-        </table>
-    
-    
+    <table id="excel-table" class="table-excel">
+        <thead style="position: sticky; top: 0; z-index: 1; background-color: #fff;">
+            <tr>
+
+                <th style="width: 50px;">Date</th>
+                <th style="width: 50px;">Utilisateur</th>
+                <th style="width: 150px;">
+                    Projet
+
+                </th>
+                <th style="width: 50px;">Client</th>
+                <th style="width: 150px;">Tâche</th>
+                <th style="width: 200px;">Libellés</th>
+                <th style="width: 20px;">
+                    temps
+                </th>
+                <th style="width: 40px;">Actions</th>
+            </tr>
+        </thead>
+        <tbody id="record-table-body">
+            <%= for siaise <- @my_saisie do %>
+            <tr>
+
+                <td><%= @date_saisie %></td>
+                <td><%= siaise.username %></td>
+                <td><%= siaise.project_title %></td>
+                <td><%= siaise.clients_name %></td>
+                <td><%= siaise.task_title %></td>
+                <td><%= siaise.libele %></td>
+                <td><%= siaise.time_value %></td>
+                <td>
+                    <%= if @is_already_validee == {false , nil } do %>
+                    <i title="modifier" class="bi bi-pencil" phx-click="edit_entrie"
+                        phx-value-entrie_id={siaise.id}></i>
+                    <i title="Supprimer" class="bi bi-trash" phx-click="delete_entrie"
+                        phx-value-entrie_id={siaise.id}></i>
+                    <% else %>
+                    ---
+                    <% end %>
+                </td>
+            </tr>
+            <% end %>
+
+        </tbody>
+    </table>
+
+
 </div>
 <%= if @is_already_validee == {false , nil } do %>
 <div style="margin-top: 10px;">
@@ -212,6 +219,9 @@
                         <% end %>
                     </select>
                 </td>
+                <td>
+                    <input type="text" name="client_name" value="" readonly>
+                </td>
                 <td class="task">
                     <select name="task"></select> <!-- Cette balise sera remplie avec les tâches associées au projet sélectionné -->
                 </td>
@@ -253,25 +263,36 @@
             fetch(`/tasks/${selectedProjectId}`)
                 .then(response => {
                     if (!response.ok) {
+                        console.log (response)
                         throw new Error('Erreur lors de la récupération des tâches');
                     }
                     return response.json();
                 })
                 .then(data => {
                     // Mettre à jour la liste déroulante des tâches avec les données récupérées
+                    console.log(data)
                     const taskSelect = document.querySelector('select[name="task"]');
+                    const tasks = data.tasks;
                     taskSelect.innerHTML = ''; // Effacer les options précédentes
-                    data.forEach(task => {
+                    tasks.forEach(task => {
                         const option = document.createElement('option');
                         option.value = task.id;
                         option.textContent = task.title; // Assurez-vous que task a une propriété appropriée pour le titre
                         taskSelect.appendChild(option);
                     });
+                    // Traitement des détails clients
+                    const clientDetails = data.client_details;
+                    // Exemple d'utilisation des détails du client
+                    console.log('Nom du client:', clientDetails.clients_name);
+                    const clientNameInput = document.querySelector('input[name="client_name"]');
+                    clientNameInput.value = clientDetails.clients_name;
                 })
                 .catch(error => {
                     console.error('Erreur :', error);
                 });
         }
+
+
     });
 
 

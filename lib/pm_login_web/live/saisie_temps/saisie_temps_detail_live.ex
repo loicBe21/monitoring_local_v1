@@ -16,7 +16,7 @@ defmodule PmLoginWeb.SaisieTemps.SaisieTempsDetailLive do
     alias PmLogin.SaisieTemps
     alias PmLoginWeb.Router.Helpers, as: Routes
 
-    def mount(_param, %{"curr_user_id" => curr_user_id , "user_id" => user_id , "date" => date , "start_date" => start_date , "end_date" => end_date , "status" => status , "right" => right }, socket) do
+    def mount(_param, %{"curr_user_id" => curr_user_id , "user_id" => user_id , "date" => date , "start_date" => start_date , "end_date" => end_date , "status" => status , "right" => right , "username" => username}, socket) do
 
       date_saisie  = Utilities.parse_date_string(date)
       today = Date.utc_today()
@@ -28,6 +28,7 @@ defmodule PmLoginWeb.SaisieTemps.SaisieTempsDetailLive do
       end_date = Utilities.parse_date_string(end_date)
       right = String.to_integer(right)
       status = String.to_integer(status)
+      username =  username
       #verifie si la date est deja validé ou pas
       is_already_validee =
         case SaisieTemps.get_entrie_validee_line(date_saisie, user_saisie.id) do
@@ -83,7 +84,8 @@ defmodule PmLoginWeb.SaisieTemps.SaisieTempsDetailLive do
             #true si la date est deja validee
             is_already_validee: is_already_validee ,
             validation_line: validation_line ,
-            show_notif: false
+            show_notif: false ,
+            username: username
           )
       {:ok, socket , layout: {PmLoginWeb.LayoutView, "saisie_layout.html"}}
     end

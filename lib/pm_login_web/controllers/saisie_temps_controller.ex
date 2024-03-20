@@ -18,8 +18,8 @@ defmodule PmLoginWeb.SaisieTempsController do
  # end
 
  #url details saisie
-  def details1(conn, %{"id" => id , "date" => date , "start_date" => start_date , "end_date" => end_date , "status" => status , "right" => right }) do
-    LiveView.Controller.live_render(conn , PmLoginWeb.SaisieTemps.SaisieTempsDetailLive ,session: %{"curr_user_id" => get_session(conn, :curr_user_id) , "user_id" => id , "date" => date , "start_date" => start_date , "end_date" => end_date , "status" => status , "right" => right }, router: PmLoginWeb.Router)
+  def details1(conn, %{"id" => id , "date" => date , "start_date" => start_date , "end_date" => end_date , "status" => status , "right" => right , "username" => username }) do
+    LiveView.Controller.live_render(conn , PmLoginWeb.SaisieTemps.SaisieTempsDetailLive ,session: %{"curr_user_id" => get_session(conn, :curr_user_id) , "user_id" => id , "date" => date , "start_date" => start_date , "end_date" => end_date , "status" => status , "right" => right , "username" => username}, router: PmLoginWeb.Router)
   end
 
   #url index saisie
@@ -28,8 +28,8 @@ defmodule PmLoginWeb.SaisieTempsController do
   end
 
   #url siaise de temps espace admin
-  def index_admin1(conn, %{"start_date" => start_date , "end_date" => end_date , "status" => status , "right" => right}) do
-    LiveView.Controller.live_render(conn , PmLoginWeb.SaisieTemps.SaisieAdminPageLive ,session: %{"curr_user_id" => get_session(conn, :curr_user_id),"start_date" => start_date , "end_date" => end_date , "status" => status , "right" => right}, router: PmLoginWeb.Router)
+  def index_admin1(conn, %{"start_date" => start_date , "end_date" => end_date , "status" => status , "right" => right , "username" => username}) do
+    LiveView.Controller.live_render(conn , PmLoginWeb.SaisieTemps.SaisieAdminPageLive ,session: %{"curr_user_id" => get_session(conn, :curr_user_id),"start_date" => start_date , "end_date" => end_date , "status" => status , "right" => right , "username" => username}, router: PmLoginWeb.Router)
   end
 
   #creation d'une ligne de saisie

@@ -21,7 +21,7 @@ defmodule PmLogin.SaisieServer do
     # Affiche un message dans la console
 
     naive_dt_now = NaiveDateTime.local_now()
-     IO.puts("Bonjour depuis le serveur ! Date et heure actuelles : #{naive_dt_now}")
+     #IO.puts("Bonjour depuis le serveur ! Date et heure actuelles : #{naive_dt_now}")
     date = Date.utc_today() |> Date.to_iso8601()
     time = "16:03:00"
     date_time_to_start = date <> " " <> time |> NaiveDateTime.from_iso8601!()

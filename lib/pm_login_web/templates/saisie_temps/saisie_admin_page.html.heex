@@ -1,5 +1,4 @@
-
-<div class="my_row">
+<div class="my_row" style="left: 2rem; position: relative;"> <!-- Centre Titre - Ravo -->
 
     <form phx-submit="do_filtre">
         <div class="my_row">
@@ -19,9 +18,9 @@
                 <select id="profile" name="right" style="width: 150px;">
                     <option value={@right_selected.id}><%= @right_selected.right %></option>
                     <%= for right <- @right_list do %>
-                        <%= if right.id != @right_selected.id do %>
-                        <option value={right.id}><%= right.right %></option>
-                        <% end %>
+                    <%= if right.id != @right_selected.id do %>
+                    <option value={right.id}><%= right.right %></option>
+                    <% end %>
                     <% end %>
                 </select>
             </div>
@@ -30,11 +29,15 @@
                 <select id="status" name="status" style="width: 150px;">
                     <option value={@status_selected.id}><%= @status_selected.status %></option>
                     <%= for status <- @status_list do %>
-                        <%= if status.id != @status_selected.id do %>
-                        <option value={status.id}><%= status.status %></option>
-                        <% end %>
+                    <%= if status.id != @status_selected.id do %>
+                    <option value={status.id}><%= status.status %></option>
+                    <% end %>
                     <% end %>
                 </select>
+            </div>
+            <div class="my_col" style="display: inline-flex; width: 22%;">
+                <label for="username" style="width: 100%;">Nom d'utilisateur</label>
+                <input type="text" name="username" value={@username}>
             </div>
             <div class="my_col">
                 <input type="submit" value="filtre" style="width: 90px;">
@@ -46,16 +49,19 @@
 
 <div class="my_row">
     <div class="my_col">
-            <h3 style=" font-size: 18px;white-space: nowrap;"><a href={Routes.saisie_temps_path(@socket, :index_saisie , date: Utilities.parse_date_to_html(Date.utc_today()))} class="" style="padding-bottom:  10px;"
-                    id="adm">>>Saisie de temps>></a></h3>
+        <h3 style=" font-size: 18px;white-space: nowrap;"><a href={Routes.saisie_temps_path(@socket, :index_saisie ,
+                date: Utilities.parse_date_to_html(Date.utc_today()))} class="" style="padding-bottom:  10px;"
+                id="adm">>>Saisie de temps>></a></h3>
     </div>
     <div class="my_col">
         <div id="header">
-            <div id="user-info">Debut : <span id="user-name"><%= Utilities.french_date_format_by_date(@start_date) %></span></div>
-            <div id="current-date">Fin : <span id="current-date-value"><%= Utilities.french_date_format_by_date(@end_date) %></span></div>
+            <div id="user-info">Debut : <span
+                    id="user-name"><%= Utilities.french_date_format_by_date(@start_date) %></span></div>
+            <div id="current-date">Fin : <span
+                    id="current-date-value"><%= Utilities.french_date_format_by_date(@end_date) %></span></div>
             <div id="current-date">Profils : <span id="current-date-value"><%= @right_string_format %></span></div>
             <div id="current-date">Status : <span id="current-date-value"><%= @status_string_format %></span></div>
-           
+            <!--<div id="totale">Heure(s): <span id="current-date-value"><%= SaisieTemps.sum_time_values(@saisie_data) %></span></div> -->
         </div>
     </div>
 </div>
@@ -66,16 +72,16 @@
             <tr>
                 <th>Date</th>
                 <th>
-                    <a href="#" phx-click="sort_by_utilisateur" >Utilisateur</a>
+                    <a href="#" phx-click="sort_by_utilisateur">Utilisateur</a>
                 </th>
                 <th>
                     <a href="#" phx-click="sort_by_droit">droit</a>
                 </th>
                 <th>
-                    <a href="#" phx-click="sort_by_time_value" >temps</a>
+                    <a href="#" phx-click="sort_by_time_value">temps</a>
                 </th>
                 <th>
-                   status
+                    status
                 </th>
                 <th style="width: 20px;">Actions</th>
             </tr>
@@ -96,13 +102,19 @@
                     <% end %>
                 </td>
                 <td style="width: 20px;">
-                    <a href={Routes.saisie_temps_path(@socket, :details1, saisie.user_id,Utilities.parse_date_to_html(saisie.date) , start_date: Utilities.parse_date_to_html(@start_date) , end_date: Utilities.parse_date_to_html(@end_date), status: @status, right: @right  ) }>
+                    <a href={Routes.saisie_temps_path(@socket, :details1,
+                        saisie.user_id,Utilities.parse_date_to_html(saisie.date) , start_date:
+                        Utilities.parse_date_to_html(@start_date) , end_date: Utilities.parse_date_to_html(@end_date),
+                        status: @status, right: @right ,username: @username ) }>
                         <i title="Voir détails" class="bi bi-eye-fill" style="cursor: pointer;"></i>
                     </a>
                     <%= if saisie.validation_date== nil do %>
-                    <i title="valider la saisie" class="bi bi-check2-circle" style="cursor: pointer;" phx-click ="validate_saise" phx-value-user_id ={saisie.user_id} phx-value-date= {Utilities.simple_date_format1(saisie.date)}  phx-value-time_value = {saisie.time_value} phx-value-user_validator_id = {@curr_user_id}></i>
+                    <i title="valider la saisie" class="bi bi-check2-circle" style="cursor: pointer;"
+                        phx-click="validate_saise" phx-value-user_id={saisie.user_id}
+                        phx-value-date={Utilities.simple_date_format1(saisie.date)}
+                        phx-value-time_value={saisie.time_value} phx-value-user_validator_id={@curr_user_id}></i>
                     <%= end %>
-                  
+
 
                 </td>
             </tr>
