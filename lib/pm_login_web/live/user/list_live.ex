@@ -7,6 +7,7 @@ defmodule PmLoginWeb.User.ListLive do
   alias PmLogin.Login.Auth
   alias PmLogin.Services
   alias PmLogin.Login.User
+  alias PmLogin.AccountActionHistory
 
   def mount(_params, %{"curr_user_id" => curr_user_id}, socket) do
     Services.subscribe()
@@ -185,8 +186,14 @@ defmodule PmLoginWeb.User.ListLive do
       socket
     ) do
       user = Login.get_user!(arch_id)
-      Login.archive_user(user)
+      #Login.archive_user(user)
       # PmLoginWeb.UserController.archive(socket, user.id)
+      archive_details = Login.archive_user(user)
+      IO.inspect archive_details
+      case archive_details  do
+        {:ok , _ , changed_field} ->
+          IO.inspect  AccountActionHistory.create_change_messages(user , changed_field)
+      end
   {:noreply,
     socket
     |> put_flash(:info, "L'utilisateur #{user.username} a bien été archivé!")

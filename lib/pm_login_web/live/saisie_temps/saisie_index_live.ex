@@ -22,6 +22,10 @@ defmodule PmLoginWeb.SaisieTemps.SaisieIndexLive do
       #today = Date.utc_today()
       current_user =  Login.get_user!(curr_user_id)
       projects = SaisieTemps.get_projects_avalable_for_saisie
+      #IO.inspect projects
+      data_projects = Jason.encode!(projects)
+
+      #IO.inspect data_projects
       my_saisie = SaisieTemps.get_saisie_by_user_by_date(curr_user_id , today)
       #verifie si la date est deja validé ou pas
       is_already_validee =
@@ -38,7 +42,7 @@ defmodule PmLoginWeb.SaisieTemps.SaisieIndexLive do
           _
            ->nil
         end
-        IO.inspect validation_line
+        #IO.inspect validation_line
       # IO.inspect my_saisie
       #  layout =
       #   case current_user.right_id do
@@ -73,7 +77,8 @@ defmodule PmLoginWeb.SaisieTemps.SaisieIndexLive do
             #true si la date est deja validee
             is_already_validee: is_already_validee ,
             validation_line: validation_line ,
-            show_notif: false
+            show_notif: false ,
+            data_projects: data_projects
           )
       {:ok, socket , layout: {PmLoginWeb.LayoutView, "saisie_layout.html"}}
     end
@@ -132,9 +137,25 @@ defmodule PmLoginWeb.SaisieTemps.SaisieIndexLive do
   #rechargde la nouvele liste de saisie avec la saisie modifier
   #recalcule la total d 'heure passé
     def handle_event("update_entrie",%{"user_id"=> user_id , "task_id" => task_id ,"project_id" => project_id ,"time_value" => time_value , "libele" => libele}  , socket) do
-        SaisieTemps.update_entrie(socket.assigns.entrie_to_edit ,%{"user_id"=> user_id , "task_id" => task_id ,"project_id" => project_id ,"time_value" => time_value , "libele" => libele})
         my_saisie = SaisieTemps.get_saisie_by_user_by_date(socket.assigns.curr_user_id , socket.assigns.date_today)
-        {:noreply , socket |>assign(my_saisie: my_saisie , total_heure: SaisieTemps.sum_time_values(my_saisie)  , show_modal: false)}
+        case  SaisieTemps.update_entrie(socket.assigns.entrie_to_edit ,%{"user_id"=> user_id , "task_id" => task_id ,"project_id" => project_id ,"time_value" => time_value , "libele" => libele}) do
+          {:error , message}
+            ->
+               {:noreply ,
+                socket
+                 |>assign(my_saisie: my_saisie , total_heure: SaisieTemps.sum_time_values(my_saisie)  , show_modal: false)
+                 |>put_flash(:error ,message)
+              }
+          _
+            ->  {:noreply ,
+                socket
+                 |>assign(my_saisie: my_saisie , total_heure: SaisieTemps.sum_time_values(my_saisie)  , show_modal: false)
+              }
+
+        end
+
+
+
     end
 
   #supprime une siaie

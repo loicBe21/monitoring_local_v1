@@ -9,6 +9,7 @@ defmodule PmLoginWeb.ProjectController do
   alias PmLogin.Login
   alias PmLogin.Email
   alias PmLogin.Services
+  alias PmLogin.SaisieTemps
 
   def board(conn, %{"id" => id}) do
 
@@ -165,7 +166,7 @@ end
           changeset = Monitoring.change_project(project)
 
           ac_list = Services.list_active_clients
-          ac_ids = [{'',''}] ++ Enum.map(ac_list, fn(%ActiveClient{} = ac) -> {ac.user.username, ac.id} end )
+          ac_ids = Enum.map(ac_list, fn(%ActiveClient{} = ac) -> {ac.user.username, ac.id} end )
 
           status = Monitoring.list_statuses_title()
 
@@ -397,5 +398,9 @@ end
       |> Login.not_connected_redirection
     end
   end
+
+
+
+
 
 end

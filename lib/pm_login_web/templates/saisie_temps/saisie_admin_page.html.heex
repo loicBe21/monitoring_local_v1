@@ -1,4 +1,11 @@
-<div class="my_row" style="left: 2rem; position: relative;"> <!-- Centre Titre - Ravo -->
+<style>
+    tr.validated {
+        background-color: #92f0a8;
+        /* Couleur verte claire pour les lignes de tableau validées */
+    }
+</style>
+<div class="my_row" style="align-items: center;display: flex; justify-content: center; position: relative;">
+    <!-- Centre Titre - Ravo -->
 
     <form phx-submit="do_filtre">
         <div class="my_row">
@@ -40,7 +47,7 @@
                 <input type="text" name="username" value={@username}>
             </div>
             <div class="my_col">
-                <input type="submit" value="filtre" style="width: 90px;">
+                <input type="submit" value="filtre">
             </div>
 
         </div>
@@ -61,13 +68,14 @@
                     id="current-date-value"><%= Utilities.french_date_format_by_date(@end_date) %></span></div>
             <div id="current-date">Profils : <span id="current-date-value"><%= @right_string_format %></span></div>
             <div id="current-date">Status : <span id="current-date-value"><%= @status_string_format %></span></div>
-            <!--<div id="totale">Heure(s): <span id="current-date-value"><%= SaisieTemps.sum_time_values(@saisie_data) %></span></div> -->
+            <div id="totale">Heure(s): <span
+                    id="current-date-value"><%= SaisieTemps.sum_time_values(@saisie_data) %></span></div>
         </div>
     </div>
 </div>
 
 <div id="table-container" style="max-height: 500px; overflow-y: scroll; width: 100%; margin-top: 20px;">
-    <table id="excel-table" class="table-excel">
+    <table id="excel-table" class="table-excel" phx-hook="tableHover">
         <thead style="position: sticky; top: 0; z-index: 1; background-color: #fff;">
             <tr>
                 <th>Date</th>
@@ -75,25 +83,25 @@
                     <a href="#" phx-click="sort_by_utilisateur">Utilisateur</a>
                 </th>
                 <th>
-                    <a href="#" phx-click="sort_by_droit">droit</a>
+                    <a href="#" phx-click="sort_by_droit">Droit</a>
                 </th>
                 <th>
-                    <a href="#" phx-click="sort_by_time_value">temps</a>
+                    <a href="#" phx-click="sort_by_time_value">Temps</a>
                 </th>
                 <th>
-                    status
+                    <a href="#" phx-click="sort_by_status">Status</a>
                 </th>
                 <th style="width: 20px;">Actions</th>
             </tr>
         </thead>
         <tbody id="record-table-body">
             <%= for saisie <- @saisie_data do %>
-            <%= if saisie.user_id != @curr_user_id and ( saisie.right_id != 4 and saisie.right_id != 100 ) do %>
-            <tr>
-                <td><%=  Utilities.french_date_format_by_date(saisie.date) %></td>
-                <td><%= saisie.username %></td>
-                <td><%= saisie.title %></td>
-                <td><%= saisie.time_value %></td>
+            <%= if 1==1  do %>
+            <tr class={"#{ if not is_nil(saisie.validation_date) , do: "validated" }"}>
+                <td class="align-center"><%=  Utilities.french_date_format_by_date(saisie.date) %></td>
+                <td class="align-center"><%= saisie.username %></td>
+                <td class="align-center"><%= saisie.title %></td>
+                <td class="align-right"><%= saisie.time_value %></td>
                 <td class="badge-cell">
                     <%= if  saisie.validation_date != nil do %>
                     <span class="badge badge-green">validé</span>
@@ -101,18 +109,18 @@
                     <span class="badge badge-orange">non validé</span>
                     <% end %>
                 </td>
-                <td style="width: 20px;">
+                <td class="align-center" style="width: 20px;">
                     <a href={Routes.saisie_temps_path(@socket, :details1,
                         saisie.user_id,Utilities.parse_date_to_html(saisie.date) , start_date:
                         Utilities.parse_date_to_html(@start_date) , end_date: Utilities.parse_date_to_html(@end_date),
                         status: @status, right: @right ,username: @username ) }>
                         <i title="Voir détails" class="bi bi-eye-fill" style="cursor: pointer;"></i>
                     </a>
-                    <%= if saisie.validation_date== nil do %>
+                    <%= if saisie.validation_date == nil do %>
                     <i title="valider la saisie" class="bi bi-check2-circle" style="cursor: pointer;"
-                        phx-click="validate_saise" phx-value-user_id={saisie.user_id}
-                        phx-value-date={Utilities.simple_date_format1(saisie.date)}
-                        phx-value-time_value={saisie.time_value} phx-value-user_validator_id={@curr_user_id}></i>
+                        phx-click="confirm_validation" phx-value-user_id={saisie.user_id} phx-value-date={saisie.date}
+                        phx-value-time_value={saisie.time_value} phx-value-user_validator_id={@curr_user_id}
+                        phx-value-saisie_username={saisie.username}></i>
                     <%= end %>
 
 
@@ -123,3 +131,21 @@
         </tbody>
     </table>
 </div>
+
+
+
+<%= live_component(
+            PmLoginWeb.LiveComponent.ConfirmValidationSaisieComponent,
+          
+            title: "Confirmation de Validation " ,
+            body: nil ,
+            user_id: @user_id ,
+            time_value: @time_value ,
+            date: @date ,
+            user_validator: @curr_user_id ,
+            body: "body" ,
+            show_modal: @show_modal ,
+            saisie_username: @saisie_username
+           
+        )
+%>

@@ -1,26 +1,26 @@
-<div class="row">
+<div class="row" style="width: 100%;">
   <div class="column column-60">
     <h1><span class="material-icons" style="font-size: 40px;">supervisor_account</span> Liste des utilisateurs</h1>
   </div>
 </div>
 
-  <div class="my_row">
-    <div class="my_col">
-      <!-- <b style="position: relative; top: 8px;">Filtre :</b> -->
-      <span class="material-icons-round filter__icon filt__and__sort__ico" >filter_list</span>
-      <form phx-change="right_selected">
+<div class="my_row">
+  <div class="my_col">
+    <!-- <b style="position: relative; top: 8px;">Filtre :</b> -->
+    <span class="material-icons-round  filter__icon filt__and__sort__ico">filter_list</span>
+    <form phx-change="right_selected">
 
-        <select id="right_filter" name="right_select" >
+      <select name="right_select" id="mySelect">
         <option value="" selected disabled hidden>Par statut</option>
         <option value="9000">Tout</option>
-          <%= for right <- @rights do %>
+        <%= for right <- @rights do %>
         <option value={right.id}><%= right.title %></option>
-          <% end %>
-        </select>
+        <% end %>
+      </select>
 
-      </form>
-    </div>
-    <!--<div class="my_col">
+    </form>
+  </div>
+  <!--<div class="my_col">
       <b style="position: relative; top: 8px;"></b>
       <span class="material-icons-round sort__icon filt__and__sort__ico">sort_by_alpha</span>
       <form phx-change="sort_users">
@@ -33,24 +33,33 @@
 
       </form>
     </div>-->
-    <div class="my_col">
-      <form phx-change="search-user">
-          <input type="text" name="search-a" placeholder="Rechercher par nom" style="width: 150px;">
-      </form>
-      <span class="material-icons-round filt__and__sort__ico" style="">search</span>
-    </div>
-
-    <div phx-click="show-form" class="button">
-      <i class="bi bi-plus-circle"></i> Créer utilisateur
-    </div>
+  <div class="my_col">
+    <form phx-change="search-user">
+      <input type="text" name="search-a" placeholder="Rechercher par nom" style="width: 150px;">
+    </form>
+    <span class="material-icons-round filt__and__sort__ico" style="">search</span>
   </div>
-  <table class="table-list-users">
-    <thead>
+
+  <div phx-click="show-form" class="button">
+    <i class="bi bi-plus-circle"></i> Créer utilisateur
+  </div>
+</div>
+
+<div id="table-container" style="max-height: 75vh; overflow-y: scroll; width: 100%; margin-top: 20px;">
+  <!--  Fixed the header - Ravo -->
+  <table class="table-list-users" style="margin-top: -1rem;" phx-hook="tableHover" id="table_hovering"> <!--  Fixed the header - Ravo -->
+    <thead style="position: sticky; top: 0; z-index: 1; background-color: #f9f9f9;"> <!--  Fixed the header - Ravo -->
       <tr>
         <th></th>
-        <th><span class="material-icons-round arr__sorted" phx-click="sorted_by_username"><%= if not @sorted_by_username do "keyboard_arrow_down" else "keyboard_arrow_up" end %></span>Nom d'utilisateur</th>
-        <th><span class="material-icons-round arr__sorted" phx-click="sorted_by_email"><%= if not @sorted_by_email do "keyboard_arrow_down" else "keyboard_arrow_up" end %></span> Email</th>
-        <th><span class="material-icons-round arr__sorted" phx-click="sorted_by_status"><%= if not @sorted_by_status do "keyboard_arrow_down" else "keyboard_arrow_up" end %></span> Statut</th>
+        <th><span class="material-icons-round arr__sorted"
+            phx-click="sorted_by_username"><%= if not @sorted_by_username do "keyboard_arrow_down" else "keyboard_arrow_up" end %></span>Nom
+          d'utilisateur</th>
+        <th><span class="material-icons-round arr__sorted"
+            phx-click="sorted_by_email"><%= if not @sorted_by_email do "keyboard_arrow_down" else "keyboard_arrow_up" end %></span>
+          Email</th>
+        <th><span class="material-icons-round arr__sorted"
+            phx-click="sorted_by_status"><%= if not @sorted_by_status do "keyboard_arrow_down" else "keyboard_arrow_up" end %></span>
+          Statut</th>
 
         <th>Actions</th>
       </tr>
@@ -58,8 +67,9 @@
     <tbody>
       <%= for user <- @users do %>
       <tr>
-        <td data-label="">         
-          <img class="profile-pic-mini" src={ Routes.static_path(@socket, "/profile_pic/#{user.profile_picture}") } width="50"/>
+        <td data-label="">
+          <img class="profile-pic-mini" src={ Routes.static_path(@socket, "/profile_pic/#{user.profile_picture}" ) }
+            width="50" />
         </td>
 
         <td data-label="Nom"><%= user.username %></td>
@@ -68,12 +78,14 @@
 
         <td data-label="Actions" style="display: block ruby; padding-top: 19px;">
           <%= if user.id != @curr_user_id do %>
-              <a title="Modifier" href={Routes.user_path(@socket, :edit, user)} class=""><i class="bi bi-info-circle info__user btn btn-info btn-lg"></i></a>
-              <%= if user.right_id != 100 do %>
-                <i title="Archiver" class="bi bi-archive btn btn-danger btn-lg archive__user" phx-click="go-arch" phx-value-id={user.id}></i>
-              <% else %>
-                <i class="bi bi-archive btn btn-dark btn-lg"></i>
-            <% end %>
+          <a title="Modifier" href={Routes.user_path(@socket, :edit, user)} class=""><i
+              class="bi bi-info-circle info__user btn btn-info btn-lg"></i></a>
+          <%= if user.right_id != 100 do %>
+          <i title="Archiver" class="bi bi-archive btn btn-danger btn-lg archive__user" phx-click="go-arch"
+            phx-value-id={user.id}></i>
+          <% else %>
+          <i class="bi bi-archive btn btn-dark btn-lg"></i>
+          <% end %>
 
           <% end %>
         </td>
@@ -81,6 +93,7 @@
       <% end %>
     </tbody>
   </table>
+</div> <!--  Fixed the header - Ravo -->
 
 <%= live_component(@socket,
                      ModalLive,
@@ -96,7 +109,7 @@
   %>
 
 
-<div class="request__form__container" style={"visibility: #{ if @form, do: "visible", else: "hidden" }; opacity: #{ if @form, do: "1", else: "0" };"}>
+<div class="request__form__container" style={"visibility: #{ if @form, do: "visible" , else: "hidden" }; opacity: #{ if @form, do: "1" , else: "0" };"}>
   <div phx-window-keydown="cancel-form" class="basecontents__without__radius request__form">
     <div class="column">
       <a class="form__close" title="Fermer" phx-click="close-form"><i class="bi bi-x"></i></a>
@@ -104,29 +117,30 @@
       <div class="request__form__content">
         <.form let={f} for={@changeset} phx-submit="save-user">
 
-        <label for="username">Nom d'utilisateur</label>
-        <%= text_input f, :username %>
-        <%= error_tag f, :req_uname_error %>
-        <%= error_tag f, :username %>
+          <label for="username">Nom d'utilisateur</label>
+          <%= text_input f, :username %>
+          <%= error_tag f, :req_uname_error %>
+          <%= error_tag f, :username %>
 
-        <label for="email">Adresse éléctronique</label>
-        <%= text_input f, :email %>
-        <%= error_tag f, :email %>
-        <%= error_tag f, :req_email_error %>
+          <label for="email">Adresse éléctronique</label>
+          <%= text_input f, :email %>
+          <%= error_tag f, :email %>
+          <%= error_tag f, :req_email_error %>
 
-        <label for="email_confirmation">Confirmer adresse e-mail</label>
-        <%= text_input f, :email_confirmation %>
-        <%= error_tag f, :email_confirmation %>
+          <label for="email_confirmation">Confirmer adresse e-mail</label>
+          <%= text_input f, :email_confirmation %>
+          <%= error_tag f, :email_confirmation %>
 
-        <label for="password">Mot de passe</label>
-        <%= password_input f, :password %>
-        <%= error_tag f, :password %>
-        <%= error_tag f, :req_pass_error %>
+          <label for="password">Mot de passe</label>
+          <%= password_input f, :password %>
+          <%= error_tag f, :password %>
+          <%= error_tag f, :req_pass_error %>
 
-        <label for="password_confirmation">Confirmer mot de passe</label>
-        <%= password_input f, :password_confirmation %>
-        <%= error_tag f, :password_confirmation %>
-        <button type="submit" style="float: right;" class="bt__com__form"><i class="bi bi-plus-circle bt__com__form__ico"></i></button>
+          <label for="password_confirmation">Confirmer mot de passe</label>
+          <%= password_input f, :password_confirmation %>
+          <%= error_tag f, :password_confirmation %>
+          <button type="submit" style="float: right;" class="bt__com__form"><i
+              class="bi bi-plus-circle bt__com__form__ico"></i></button>
         </.form>
       </div>
 

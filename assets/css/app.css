@@ -46,6 +46,7 @@
 @import "./BoardControle.css";
 @import "./saisie_temps_filter.css";
 @import "./custom_css.css";
+@import "../node_modules/tom-select/dist/css/tom-select.bootstrap4.css";
 /*@import "../node_modules/tom-select/dist/css/tom-select.bootstrap4.css"; */
 /*
 @font-face {

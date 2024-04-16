@@ -17,18 +17,22 @@
             <span>Total heure(s): <%= @total_heure %> </span>
             <span>Nombre de ligne(s) : <%= length(@my_saisie) %></span>
             <%= if @validation_line != nil  do %>
-            <span>Validé par : <%= @validation_line.user_validator %> le <%= Utilities.simple_date_format_with_hours(@validation_line.inserted_at) %> </span>
-           
+            <span>Validé par : <%= @validation_line.user_validator %> le
+                <%= Utilities.simple_date_format_with_hours(@validation_line.inserted_at) %> </span>
+
             <% end %>
         </div>
     </div>
     <div class="buttons">
         <%= if @validation_line != nil  do %>
-        <a href="#" class="btn btn-lg btn-danger">annuler la validation</a>
+        <a href="#" class="btn btn-lg btn-danger" phx-click="delete_validation_line"
+            phx-value-validation_line_id={@validation_line.id}>de-validé</a>
         <% else %>
-        <a href="#" class="btn btn-lg btn-primary">validé</a>
+        <a href="#" class="btn btn-lg btn-primary" style="display: none;" phx-click="validate_saise"
+            phx-value-user_id={@user_saisie.id} phx-value-date={@date_saisie} phx-value-time_value={@total_heure}
+            phx-value-user_validator_id={@curr_user_id}>validé</a>
         <% end %>
-        <a href={Routes.saisie_temps_path(@socket, :index_admin1 , start_date: Utilities.parse_date_to_html(@start_date) , end_date: Utilities.parse_date_to_html(@end_date), status: @status, right: @right , username: @username )}
+        <a href={Routes.saisie_temps_path(@socket, :index_admin1 , start_date: Utilities.parse_date_to_html(@start_date), end_date: Utilities.parse_date_to_html(@end_date), status: @status, right: @right , username: @username )}
             class="btn btn-lg btn-secondary"><i class="bi bi-arrow-bar-left"></i>retour</a>
     </div>
 </div>
@@ -49,7 +53,7 @@
         </div>
     </div>
     <div class="my_col" style="text-align: right;"> <!-- Aligner à droite -->
-        <a href={Routes.saisie_temps_path(@socket, :index_admin1 , start_date: Utilities.parse_date_to_html(@start_date) , end_date: Utilities.parse_date_to_html(@end_date), status: @status, right: @right , username: @username )}
+        <a href={Routes.saisie_temps_path(@socket, :index_admin1 , start_date: Utilities.parse_date_to_html(@start_date), end_date: Utilities.parse_date_to_html(@end_date), status: @status, right: @right , username: @username )}
             class="btn btn-lg btn-secondary"><i class="bi bi-arrow-bar-left"></i>retour</a>
     </div>
 
@@ -98,18 +102,18 @@
             <%= for siaise <- @my_saisie do %>
             <tr>
 
-                <td><%= @date_saisie %></td>
-                <td><%= siaise.username %></td>
-                <td><%= siaise.project_title %></td>
-                <td><%= siaise.clients_name %></td>
+                <td class="align-center"><%= @date_saisie %></td>
+                <td class="align-center"><%= siaise.username %></td>
+                <td class="align-center"><%= siaise.project_title %></td>
+                <td class="align-center"><%= siaise.clients_name %></td>
                 <td><%= siaise.task_title %></td>
                 <td><%= siaise.libele %></td>
-                <td><%= siaise.time_value %></td>
-                <td>
+                <td class="align-right"><%= siaise.time_value %></td>
+                <td class="align-center">
                     <%= if @is_already_validee == {false , nil } do %>
                     <i title="modifier" class="bi bi-pencil" phx-click="edit_entrie"
                         phx-value-entrie_id={siaise.id}></i>
-                    <i title="Supprimer" class="bi bi-trash" phx-click="delete_entrie"
+                    <i title="Supprimer" class="bi bi-trash" phx-click="delete_confiration"
                         phx-value-entrie_id={siaise.id}></i>
                     <% else %>
                     ---
@@ -144,7 +148,8 @@
             project_select_state: @project_select_state ,
             left_button: "Annuler",
             left_button_action: "cancel",
-            show_modal: @show_modal
+            show_modal: @show_modal 
+            
            
             
 
@@ -152,148 +157,20 @@
 %>
 
 
-<script>
+<%= live_component(@socket,
+                     PmLoginWeb.LiveComponent.ModalLive,
+                     id: "confirm-suppr",
+                     title: "Suprrimer?",
+                     body: "Voulez vous vraiment supprimer cette ligne de saisie",
+                     right_button: "Oui",
+                     right_button_action: "delete_entrie",
+                     right_button_param: @entrie_id_to_delete,
+                     left_button: "Annuler",
+                     show_modal: @show_modal_suppr,
+                     left_button_action: "cancel-delete_entrie")
+  %>
 
 
-    // Fonction pour sauvegarder une ligne
-    function saveRow(icon) {
-        const row = icon.closest('tr');
-        const inputs = row.querySelectorAll('input, select'); // Correction ici
-        const rowData = {};
-        inputs.forEach(input => {
-            rowData[input.name] = input.value;
-        });
-        // Vous pouvez maintenant soumettre cette ligne de données à votre backend ou effectuer d'autres actions
-        console.log("Données à sauvegarder:", rowData);
-
-        // Récupérer le jeton CSRF depuis un champ caché dans le formulaire
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-        // Envoi des données au backend avec le jeton CSRF
-        fetch('/save_saisie', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-Token': csrfToken  // Inclure le jeton CSRF dans les en-têtes de la requête
-            },
-            body: JSON.stringify(rowData)
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Erreur lors de la sauvegarde des données');
-                }
-                return response.json();
-            })
-            .then(data => {
-                // Faire quelque chose avec la réponse du backend si nécessaire
-                console.log('Réponse du backend :', data);
-                window.location.reload();
-            })
-            .catch(error => {
-                console.error('Erreur :', error);
-                window.location.reload();
-            });
-    }
-    // Fonction pour supprimer une ligne
-    function removeRow(icon) {
-        icon.closest('tr').remove();
-    }
-
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const tableBody = document.getElementById('record-table-body');
-        const addRowIcon = document.getElementById('addRowIcon');
-
-        // Fonction pour ajouter une nouvelle ligne au tableau
-        function addRow() {
-            const newRow = `
-            <tr>
-                <input type="hidden" name="user_id" value="<%= @user_saisie.id %>" >
-                <td><input type="date" name="date" value="<%= @date_saisie %>"></td>
-                <td><input type="text" name="user" value="<%= @user_saisie.username %>" readonly></td>
-                <td class="project_id">
-                    <select name="project_id">
-                        <option value="">Sélectioner un projet</option>
-                        <%= for project <- @projects do %>
-                            <option value="<%= project.id %>"><%= project.title %></option>
-                        <% end %>
-                    </select>
-                </td>
-                <td>
-                    <input type="text" name="client_name" value="" readonly>
-                </td>
-                <td class="task">
-                    <select name="task"></select> <!-- Cette balise sera remplie avec les tâches associées au projet sélectionné -->
-                </td>
-                <td class="labels"><input type="text" name="labels" placeholder="Libellé" ></td>
-                <td>
-                   
-                    <input type="number" id="decimal_input" name="hours" step="0.01" value="0.0">
-                </td>
-                <td>
-                    <i title="Sauvegarder" class="bi bi-save" style="cursor: pointer;" onclick="saveRow(this)"></i>
-                    <i title="Supprimer" class="bi bi-trash" style="cursor: pointer;" onclick="removeRow(this)"></i>
-                </td>
-            </tr>
-        `;
-            tableBody.insertAdjacentHTML('beforeend', newRow);
-
-            // Sélection de la liste déroulante des projets à l'intérieur de la fonction addRow
-            const projectSelect = document.querySelector('select[name="project_id"]');
-            console.log(projectSelect);
-            // Écouteur d'événements pour détecter les changements en temps réel dans la liste déroulante des projets
-            projectSelect.addEventListener('change', function (event) {
-                const selectedProjectId = event.target.value;
-                updateTaskOptions(selectedProjectId);
-            });
-
-        }
-
-        // Ajouter un écouteur de clic à l'icône pour ajouter une ligne
-        addRowIcon.addEventListener('click', addRow);
-
-
-        // Fonction pour mettre à jour les options du menu déroulant des tâches en fonction du projet sélectionné
-        // Fonction pour mettre à jour les options du menu déroulant des tâches en fonction du projet sélectionné
-        function updateTaskOptions(selectedProjectId) {
-            // Votre logique pour mettre à jour les options du menu déroulant des tâches ici
-            console.log('Projet sélectionné:', selectedProjectId);
-
-            // Effectuer une requête AJAX vers votre endpoint backend pour récupérer les tâches associées au projet sélectionné
-            fetch(`/tasks/${selectedProjectId}`)
-                .then(response => {
-                    if (!response.ok) {
-                        console.log (response)
-                        throw new Error('Erreur lors de la récupération des tâches');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    // Mettre à jour la liste déroulante des tâches avec les données récupérées
-                    console.log(data)
-                    const taskSelect = document.querySelector('select[name="task"]');
-                    const tasks = data.tasks;
-                    taskSelect.innerHTML = ''; // Effacer les options précédentes
-                    tasks.forEach(task => {
-                        const option = document.createElement('option');
-                        option.value = task.id;
-                        option.textContent = task.title; // Assurez-vous que task a une propriété appropriée pour le titre
-                        taskSelect.appendChild(option);
-                    });
-                    // Traitement des détails clients
-                    const clientDetails = data.client_details;
-                    // Exemple d'utilisation des détails du client
-                    console.log('Nom du client:', clientDetails.clients_name);
-                    const clientNameInput = document.querySelector('input[name="client_name"]');
-                    clientNameInput.value = clientDetails.clients_name;
-                })
-                .catch(error => {
-                    console.error('Erreur :', error);
-                });
-        }
-
-
-    });
-
-
-</script>
+<div id="data-container" data-user-id={@user_saisie.id} data-today={@date_saisie} data-username={@user_saisie.username}
+    data-projects={@data_projects} style="display: none;">
+</div>

@@ -5,11 +5,13 @@ defmodule PmLogin.Login do
   """
   import Plug.Conn
   import Ecto.Query, warn: false
+
   alias PmLogin.Repo
   alias PmLogin.Services.ActiveClient
   alias PmLogin.Services
   alias PmLogin.Login.{Right, User}
   alias PmLogin.Login.ContributorFunction, as: Function
+
 
   @topic inspect(__MODULE__)
   def subscribe do
@@ -389,10 +391,23 @@ defmodule PmLogin.Login do
 
   def archive_user(%User{} = user) do
     params = %{"right_id" => 100}
-    user
+   changeset =  user
     |> User.archive_changeset(params)
-    |> Repo.update()
-    |> broadcast_change([:user, :updated])
+  #  |> Repo.update()
+  # |> broadcast_change([:user, :updated])
+    case changeset.valid? do
+      true ->
+        changed_field = changeset.changes
+        case Repo.update(changeset) do
+          {:ok , newUser} ->
+            broadcast_change({:ok , newUser} ,[:user, :updated])
+            {:ok , newUser ,  changed_field}
+          _ ->
+            changeset
+        end
+      false ->
+        changeset
+    end
   end
 
   def list_admins_and_attributors(current_user_id) do
@@ -541,10 +556,27 @@ defmodule PmLogin.Login do
     |> Repo.update()
   end
 
+
+
+
+   #modification du code pour retourner les champs modifier
   def update_user(%User{} = user, attrs) do
-    user
-    |> User.right_changeset(attrs)
-    |> Repo.update()
+   changeset =  user
+      |> User.right_changeset(attrs)
+     # |> Repo.update()
+   IO.inspect changeset
+   case changeset.valid? do
+    true ->
+      changes_field = changeset.changes
+      update_status = Repo.update(changeset)
+      case update_status  do
+        {:ok , user} ->
+          {:ok ,  user , changes_field}
+        _
+         -> update_status
+      end
+
+   end
   end
 
   def update_raw_user_password(%User{} = user, attrs) do

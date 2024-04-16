@@ -53,16 +53,18 @@
       <%= error_tag f, :deadline_before_dtstart %>
 
     </div>
-    <!-- <div class="column">
+    <div class="column">
       <%= label f, "Client attitré" %>
       <%= select f, :active_client_id, @ac_ids, style: "width: -moz-available;" %>
       <%= error_tag f, :active_client_id %>
-    </div> -->
+    </div> 
+    <!--
     <div class="column">
       <%= label f, "Client attitré" %>
       <p><%= @project.active_client.user.username %></p>
     </div>
 
+    !-->
     <div class="column">
       <%= label f, "Status" %>
       <%= select f, :status_id, @status, style: "width: -moz-available;" %>

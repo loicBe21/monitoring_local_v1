@@ -31,6 +31,7 @@ defmodule PmLoginWeb.Router do
     get "/saisie_detailstemps/:id/:date" , SaisieTempsController , :details1
 
 
+
     #contributor route
     get "/logs", ProjectController, :logs
     get "/my_projects", ContributorController, :my_projects

@@ -60,19 +60,20 @@ defmodule PmLoginWeb.LiveComponent.ModifTimeEntriesComponent do
                             <%= if task.id != @entrie_task.id do %>
                             <option value={task.id}><%= task.title %></option>
                             <% end %>
+
                         <% end %>
                       </select>
                   </div>
                   <div class="my_row">
                     <div class="my_col">
                       <label class="zoom-out">Libele</label>
-                      <input type="text" name="libele" value={@entrie.libele}>
+                      <textarea  cols="50" rows="20" name="libele" value={@entrie.libele} style="width: 768px; height: 59px;" ><%= @entrie.libele %></textarea>
                     </div>
                   </div>
                   <div class="my_row">
                     <div class="my_col">
                       <label class="zoom-out">Temps</label>
-                      <input type="number" id="decimal_input" name="time_value" step="0.01" value={@entrie.time_value}>
+                      <input type="number" id="decimal_input" name="time_value"  value={@entrie.time_value}>
                     </div>
                   </div>
                   <div class="my_row" style="margin-top: 20px;">

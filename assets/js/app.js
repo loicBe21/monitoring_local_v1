@@ -4,10 +4,59 @@ import "../css/app.css";
 
 import "./BoardControle.js";
 
-/*
 import 'tom-select'
+import { addRow, haveLineNotSaved } from "./tom_select_saisie_page.js";
 import TomSelect from "tom-select";
 
+
+
+document.addEventListener('DOMContentLoaded', function () {
+  // Vérifier si les éléments existent sur la page
+  const tableBody = document.getElementById('record-table-body');
+  const addRowLink = document.getElementById('addRowIcon');
+  const dataContainer = document.getElementById('data-container');
+
+  // Vérifier si les éléments nécessaires existent
+  if (tableBody && addRowLink && dataContainer) {
+    // Récupérer les données uniquement si les éléments existent
+    const userId = dataContainer.dataset.userId;
+    //console.log(userId)
+    const date = dataContainer.dataset.today;
+    //console.log(date)
+    const username = dataContainer.dataset.username;
+    //console.log(username)
+    //console.log(dataContainer.dataset.projects)
+    const projects = JSON.parse(dataContainer.dataset.projects);
+    //console.log(projects)
+
+    // Ajouter un écouteur d'événements uniquement si l'icône d'ajout de ligne existe
+    addRowLink.addEventListener('click', function () {
+     
+      lineNotSaved = haveLineNotSaved(tableBody);
+      console.log(lineNotSaved);
+      if (!lineNotSaved) {
+        addRow(tableBody, TomSelect, userId, date, username, projects);
+      }
+      else{
+       
+        var addRowIcon = document.querySelector('#addRowIcon i');
+        console.log(addRowIcon);
+        addRowLink.classList.add('non-cliquable');
+        addRowIcon.style.cursor = 'not-allowed';
+        
+      }
+      
+      
+    });
+  }
+
+ 
+ 
+});
+
+
+
+/*
 var test =
 
 
@@ -74,19 +123,95 @@ const Hooks = {};
 //   }
 // }
 
-Hooks.TomSelectHook = {
+
+
+
+/* hooks phoenix pour les changement couleur des lignes survolé
+mettre cette hooks en attribut du balise <table></table> si le table a besoin de cette fonctionalité
+NB : a mettre uniquement sur une element html table
+
+*/
+
+Hooks.tableHover = {
   mounted() {
-    const selectElement = this.el;
-    const tomSelect = new TomSelect(selectElement, {
-     
-      searchable: true,
-      sortField: {
-        field: "text",
-        direction: "asc"
-      }
+    const table = this.el; // Récupérer la table à partir de this.el
+
+    table.querySelectorAll('tbody tr').forEach(row => {
+      let currentColor = '';
+
+      row.addEventListener('mouseover', () => {
+        currentColor = row.style.backgroundColor;
+        row.style.backgroundColor = '#60b0f0';
+      });
+
+      row.addEventListener('mouseout', () => {
+        row.style.backgroundColor = currentColor;
+      });
     });
   }
-}
+};
+
+Hooks.CustomSampleSelect = {
+  mounted() {
+    console.log("CustomSampleSelect hook initialized");
+
+    // Récupérer l'élément select
+    var selectElement = document.getElementById("mySelect");
+
+    // Assurez-vous que l'élément select est rendu dans le DOM
+    if (selectElement) {
+      console.log("Element found:", selectElement);
+
+      // Initialisez TomSelect avec l'élément select s'il n'existe pas déjà d'instance
+      if (!selectElement.tomselect) {
+        selectElement.tomselect = new TomSelect(selectElement, {
+          // Configurations de TomSelect ici
+          create: false,
+          sortField: {
+            field: "text",
+            direction: "asc"
+          }
+        });
+        console.log("TomSelect options:", selectElement.tomselect.options);
+      }
+    } else {
+      console.error("Select element not found");
+    }
+  },
+  updated() {
+    console.log("CustomSampleSelect hook updated");
+
+    // Récupérer l'élément select
+    var selectElement = document.getElementById("mySelect");
+
+    // Vérifiez si une instance de TomSelect est attachée à l'élément select
+    if (selectElement && selectElement.tomselect) {
+      console.log("Element found:", selectElement);
+
+      // Supprimez toutes les options actuelles de TomSelect
+      selectElement.tomselect.clearOptions();
+
+      // Ajoutez de nouvelles options à TomSelect à partir de l'élément select
+      var selectOptions = selectElement.querySelectorAll("option");
+      selectOptions.forEach(function (option) {
+        selectElement.tomselect.addOption({
+          value: option.value,
+          text: option.textContent
+        });
+      });
+
+      // Actualisez le TomSelect pour refléter les modifications
+      selectElement.tomselect.refreshOptions();
+    } else {
+      console.error("Select element or TomSelect instance not found");
+    }
+  }
+};
+
+
+
+
+
 
 Hooks.CsvExportHook = {
   mounted() {

@@ -14,7 +14,7 @@ defmodule PmLogin.SaisieTemps.TimeEntrie do
     belongs_to :project, Project
     field :libele, :string
     field :time_value, :decimal
-    field :validation_status , :integer
+   # field :validation_status , :integer
     timestamps()
 
   end
@@ -35,7 +35,12 @@ defmodule PmLogin.SaisieTemps.TimeEntrie do
  def update_changeset(entrie ,attrs) do
   entrie
    |>cast(attrs , [:id , :task_id ,:user_id ,:project_id ,:libele  , :time_value])
-   |>validate_positive_time_value()
+      |>validate_required(:task_id , message: "task can't be null")
+      |>validate_required(:user_id , message: "user can't be null")
+      |>validate_required(:project_id , message: "project can't be null")
+      |>validate_required(:libele , message: "libele can't be null")
+      |>validate_required(:time_value , message: "time value can't be null")
+      |>validate_positive_time_value()
  end
 
   defp validate_date(changeset) do
@@ -73,12 +78,12 @@ defmodule PmLogin.SaisieTemps.TimeEntrie do
 
 
   #changeset de validation d'une ligne de saisie
-  def validation_changeset(entrie , attrs) do
-    entrie
-    |>cast(attrs , [:validation_status] )
+ # def validation_changeset(entrie , attrs) do
+ #  entrie
+ #   |>cast(attrs , [:validation_status] )
 
 
-  end
+ # end
 
 
 

@@ -7,6 +7,7 @@ defmodule PmLoginWeb.UserController do
   alias PmLogin.Login.Auth
   alias Phoenix.LiveView
   alias PmLogin.Monitoring
+  alias PmLogin.AccountActionHistory
 
   def index(conn, _params) do
 
@@ -273,13 +274,19 @@ defmodule PmLoginWeb.UserController do
 
 
 
+
+
+
   def update(conn, %{"id" => id, "user" => user_params}) do
     user = Login.get_user!(id)
 
     # IO.inspect user_params
 
     case Login.update_user(user, user_params) do
-      {:ok, user} ->
+      {:ok, user_updated ,field_changed} ->
+        IO.inspect user_updated
+        IO.inspect field_changed
+        IO.inspect AccountActionHistory.create_change_messages(user , field_changed)
         conn
         |> put_flash(:info, "Profil mis à jour.")
         |> redirect(to: Routes.user_path(conn, :edit, user))
@@ -316,16 +323,16 @@ defmodule PmLoginWeb.UserController do
   end
 
   def archive(conn, %{"id" => id}) do
-
+     IO.puts "makato"
     if Login.is_connected?(conn) do
+
       cond do
         Login.is_admin?(conn) ->
           user = Login.get_user!(id)
           Login.archive_user(user)
-
           conn
-          |> put_flash(:info, "Utilisateur #{user.username} archivé(e).")
-          |> redirect(to: Routes.user_path(conn, :list))
+            |> put_flash(:info, "Utilisateur #{user.username} archivé(e)!")
+            |> redirect(to: Routes.user_path(conn, :list))
 
         true ->
           conn

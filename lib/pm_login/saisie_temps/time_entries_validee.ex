@@ -8,7 +8,7 @@ defmodule PmLogin.SaisieTemps.TimeEntriesValidee do
   schema "time_entries_validee" do
     field :date, :date
     field :time_value, :decimal
-    field :validation_status , :integer
+   # field :validation_status , :integer
     belongs_to :user, User
     belongs_to :user_validator , User
 
@@ -27,8 +27,8 @@ defmodule PmLogin.SaisieTemps.TimeEntriesValidee do
 
   def create_changeset(entri_validee , attrs) do
     entri_validee
-    |>cast(attrs ,[:date , :time_value ,:user_id , :user_validator_id , :validation_status] )
-    |> validate_required([:date, :time_value, :user_id, :user_validator_id , :validation_status])
+    |>cast(attrs ,[:date , :time_value ,:user_id , :user_validator_id ] )
+    |> validate_required([:date, :time_value, :user_id, :user_validator_id ])
     |> validate_number(:time_value, greater_than_or_equal_to: 0) # Assurez-vous que time_value est un nombre positif
   end
 

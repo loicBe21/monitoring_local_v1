@@ -15,6 +15,7 @@ defmodule PmLoginWeb.SaisieTemps.SaisieTempsDetailLive do
     alias PmLogin.Login
     alias PmLogin.SaisieTemps
     alias PmLoginWeb.Router.Helpers, as: Routes
+    alias PmLoginWeb.LiveComponent.ModalLive
 
     def mount(_param, %{"curr_user_id" => curr_user_id , "user_id" => user_id , "date" => date , "start_date" => start_date , "end_date" => end_date , "status" => status , "right" => right , "username" => username}, socket) do
 
@@ -23,6 +24,10 @@ defmodule PmLoginWeb.SaisieTemps.SaisieTempsDetailLive do
       current_user =  Login.get_user!(curr_user_id)
       user_saisie = Login.get_user!(String.to_integer(user_id))
       projects = SaisieTemps.get_projects_avalable_for_saisie
+      IO.inspect projects
+      data_projects = Jason.encode!(projects)
+
+      IO.inspect data_projects
       my_saisie = SaisieTemps.get_saisie_by_user_by_date(String.to_integer(user_id) , date_saisie)
       start_date = Utilities.parse_date_string(start_date)
       end_date = Utilities.parse_date_string(end_date)
@@ -85,7 +90,13 @@ defmodule PmLoginWeb.SaisieTemps.SaisieTempsDetailLive do
             is_already_validee: is_already_validee ,
             validation_line: validation_line ,
             show_notif: false ,
-            username: username
+            username: username ,
+            data_projects: data_projects,
+
+            #pour la confirmation de suppression d'une saisie
+            show_modal_suppr: false,
+            entrie_id_to_delete: nil
+
           )
       {:ok, socket , layout: {PmLoginWeb.LayoutView, "saisie_layout.html"}}
     end
@@ -146,21 +157,23 @@ defmodule PmLoginWeb.SaisieTemps.SaisieTempsDetailLive do
   #mis a jour la liste de saisie
   #re calcule la toatl d'heure passé
   #supprime directement la ligne dans la base de données
-    def handle_event("delete_entrie", %{"entrie_id" => entrie_id}, socket) do
+
+
+  #def handle_event("delete_entrie", %{"entrie_id" => entrie_id}, socket) do
     # Convertir l'ID en entier si nécessaire
-      entrie_id = String.to_integer(entrie_id)
-      case SaisieTemps.delete_entrie(entrie_id) do
-        {:ok , _} ->
-          my_saisie = SaisieTemps.get_saisie_by_user_by_date(socket.assigns.user_saisie.id , socket.assigns.date_today)
-          {:noreply , socket
-          |> assign(
-            my_saisie: my_saisie ,
-            total_heure: SaisieTemps.sum_time_values(my_saisie)
-          )}
-        {:error , _} ->
-          {:noreply , socket}
-      end
-    end
+  #    entrie_id = String.to_integer(entrie_id)
+  #    case SaisieTemps.delete_entrie(entrie_id) do
+  #      {:ok , _} ->
+  #        my_saisie = SaisieTemps.get_saisie_by_user_by_date(socket.assigns.user_saisie.id , socket.assigns.date_saisie_format_date)
+  #        {:noreply , socket
+  #        |> assign(
+  #          my_saisie: my_saisie ,
+  #          total_heure: SaisieTemps.sum_time_values(my_saisie)
+  #        )}
+  #      {:error , _} ->
+  #        {:noreply , socket}
+  #    end
+  #  end
 
 
 
@@ -170,7 +183,7 @@ defmodule PmLoginWeb.SaisieTemps.SaisieTempsDetailLive do
     def handle_event("delete_validation_line",%{"validation_line_id" => validation_id}, socket) do
       IO.inspect validation_id
       validation_id = String.to_integer(validation_id)
-      url = Routes.saisie_temps_path(socket, :details1, socket.assigns.user_saisie.id,socket.assigns.date_saisie , start_date: Utilities.parse_date_to_html(socket.assigns.start_date) , end_date: Utilities.parse_date_to_html(socket.assigns.end_date), status: socket.assigns.status, right: socket.assigns.right  )
+      url = Routes.saisie_temps_path(socket, :details1, socket.assigns.user_saisie.id,socket.assigns.date_saisie , start_date: Utilities.parse_date_to_html(socket.assigns.start_date) , end_date: Utilities.parse_date_to_html(socket.assigns.end_date), status: socket.assigns.status, right: socket.assigns.right ,username: socket.assigns.username  )
       case SaisieTemps.delete_validation_line(validation_id) do
          {:ok, _} ->
              {:noreply ,
@@ -188,10 +201,90 @@ defmodule PmLoginWeb.SaisieTemps.SaisieTempsDetailLive do
     end
 
 
+    def handle_event("validate_saise",params, socket) do
+      IO.inspect params
+      start_date = socket.assigns.start_date
+      end_date = socket.assigns.end_date
+      right = socket.assigns.right
+      status = socket.assigns.status
+      username = socket.assigns.username
+      case SaisieTemps.save_saisie_validee(params) do
+        {:ok ,_}
+          ->
+
+            {:noreply , socket
+          |>assign(saisie_data: SaisieTemps.get_resum_saisie_by_params(start_date, end_date , right , status , username))
+          }
+          {:error , message}
+          ->  {:noreply , socket
+          |> clear_flash()
+          |>put_flash(:error , message)}
+      end
+
+
+
+    end
+
 
     def parse_integer_list(strings) do
       Enum.map(strings, &String.to_integer/1)
     end
+
+
+
+    #les trois fonction qui suivent gére la suppression d'une ligne de saisie
+
+
+
+    #affiche la popup de confirmation de suppression d'une ligne de saisie  et recupére l'id a du ligne de saisie a supprimer
+    def handle_event("delete_confiration", %{"entrie_id" => id}, socket) do
+
+      {:noreply, assign(socket, show_modal_suppr: true, entrie_id_to_delete: id)}
+    end
+
+
+    #annule la suppression ,
+    def handle_info(
+      {ModalLive, :button_clicked, %{action: "cancel-delete_entrie"}},
+      socket
+      ) do
+        {:noreply, assign(socket, show_modal_suppr:  false)}
+      end
+
+
+
+
+      #supprime une siaie
+      #mis a jour la liste de saisie
+      #re calcule la toatl d'heure passé
+      #supprime directement la ligne dans la base de données
+      #recupere les param depuis le ModalLive (la pop up de confirmation)
+
+    def handle_info(
+      {ModalLive, :button_clicked, %{action: "delete_entrie", param: entrie_id_to_delete}},
+      socket
+      ) do
+
+
+        # Convertir l'ID en entier si nécessaire
+        entrie_id = String.to_integer(entrie_id_to_delete)
+        case SaisieTemps.delete_entrie(entrie_id) do
+          {:ok , _} ->
+            my_saisie = SaisieTemps.get_saisie_by_user_by_date(socket.assigns.user_saisie.id , socket.assigns.date_saisie_format_date)
+            {:noreply , socket
+            |> assign(
+              my_saisie: my_saisie ,
+              total_heure: SaisieTemps.sum_time_values(my_saisie) ,
+              show_modal_suppr:  false
+
+            )}
+          {:error , _} ->
+            {:noreply , socket}
+        end
+    end
+
+
+    #fin de la gestion de suppression d'une ligne
 
 
     def render(assigns) do
