@@ -27,6 +27,7 @@ defmodule PmLoginWeb.SaisieTemps.SaisieIndexLive do
 
       #IO.inspect data_projects
       my_saisie = SaisieTemps.get_saisie_by_user_by_date(curr_user_id , today)
+      IO.inspect my_saisie
       #verifie si la date est deja validé ou pas
       is_already_validee =
         case  SaisieTemps.get_entrie_validee_line(today , curr_user_id) do

@@ -406,6 +406,9 @@ defmodule PmLogin.SaisieTemps do
    # end
 
 
+   def test() do
+    Repo.all(TimeEntrie)
+   end
 
 
     def get_entrie_validee_line(date , user_id) do
