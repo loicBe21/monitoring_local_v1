@@ -68,6 +68,9 @@ defmodule PmLoginWeb.Project.BoardLive do
     priorities = Monitoring.list_priorities()
     list_priorities = Enum.map(priorities, fn %Priority{} = p -> {p.title, p.id} end)
 
+    #ajout des admin dans la liste déroulante de création de taches
+    admin_users = Login.list_admins_users()
+    list_admins = Enum.map(admin_users, fn %User{} = a -> {a.username, a.id} end)
     attributors = Login.list_attributors()
     list_attributors = Enum.map(attributors, fn %User{} = a -> {a.username, a.id} end)
 
@@ -170,7 +173,9 @@ defmodule PmLoginWeb.Project.BoardLive do
        tasks_history: tasks_history,
        task_history: task_history,
        attrs_history: nil,
-       old_task: nil
+       old_task: nil ,
+       #pour afficher les admin dans la liste deroulante si admin
+       list_admins: list_admins
      )
      |> allow_upload(:file,
        accept:
@@ -1345,7 +1350,7 @@ end
         if Monitoring.is_a_child?(real_task) and Kanban.get_stage!(card.stage_id).status_id == 5 and
              real_task.status_id != 5 do
 
-          IO.puts "REFA INPNA N MAKATO LETI EEEEEEEE  ***************************************************************************"
+
           # IO.puts "CHILD:"
           # IO.inspect real_task
           # IO.puts " AVEC PARENT:"
@@ -1878,7 +1883,7 @@ end
   end
 
   def handle_event("submit_secondary", %{"task" => params}, socket) do
-    # IO.puts("input")
+    IO.inspect params
     hour = String.to_integer(params["hour"])
     minutes = String.to_integer(params["minutes"])
 

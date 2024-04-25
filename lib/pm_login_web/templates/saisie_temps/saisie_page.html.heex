@@ -12,161 +12,146 @@
             <span class="badge badge-orange normal-size">Non validée</span>
             <% end %>
             <span>Date du saisie: <%= Utilities.french_date_format_by_date(@date_today) %> </span>
-            <span>Total heure(s): <%= @total_heure %> </span>
+            <span >Total heure(s): <%= PmLogin.Utilities.format_decimal(to_string(@total_heure)) %> </span>
             <span>Nombre de ligne(s) : <%= length(@my_saisie) %></span>
             <%= if @validation_line != nil  do %>
-            <span>Validé par : <%= @validation_line.user_validator %> le
-                <%= Utilities.simple_date_format_with_hours(@validation_line.inserted_at) %> </span>
+                <span>Validé par : <%= @validation_line.user_validator %> le <%= Utilities.simple_date_format_with_hours(@validation_line.inserted_at) %> </span>
             <% end %>
         </div>
     </div>
     <div class="buttons">
-
+        
         <form phx-submit="navigate_to_other_date" class="my-form">
-
+           
             <div class="my_row">
-
+        
                 <div class="my_col">
                     <label>Date : </label>
                     <input type="date" name="date" value={@today} style="width: 150px;">
                 </div>
                 <div class="my_col">
-                    <input type="submit" class="btn btn-primary" value="ok">
+                    <input type="submit" class="btn btn-primary" value="ok" >
                 </div>
-
+        
             </div>
-
-
-        </form>
+        
+        
+        </form>  
     </div>
 </div>
 
 
 
-<div class="my_row" style="display: none;">
-
-    <form phx-submit="navigate_to_other_date">
-        <h6>Basculer vers une autre date</h6>
-        <div class="my_row">
-
-            <div class="my_col">
-                <label>date : </label>
-                <input type="date" name="date" value={@today} style="width: 150px;">
-            </div>
-            <div class="my_col">
-                <input type="submit" value="ok" style="width: 90px;">
-            </div>
-
-        </div>
 
 
-    </form>
-</div>
-
-<div class="my_row">
-
+<div class="my_row" id="espace_admin">
+    
     <div class="my_col">
         <%= if @current_user.right_id == 1 do %>
-        <!-- <a href="/saisie_admin?start_date="> !-->
-        <a href={Routes.saisie_temps_path(@socket, :index_admin1 , start_date: Utilities.parse_date_to_html(@date_today), end_date: Utilities.parse_date_to_html(@ date_today), status: "0" , right: "0" , username: "" )}>
+       <!-- <a href="/saisie_admin?start_date="> !-->
+        <a href ={Routes.saisie_temps_path(@socket, :index_admin1 , start_date: Utilities.parse_date_to_html(@date_today) , end_date: Utilities.parse_date_to_html(@ date_today), status: "0", right: "0"  , username: "")}>
             <p>Espace admin</p>
         </a>
-
+    
         <% end %>
     </div>
     <div class="my_col" style="display: none;">
         <div id="header">
             <div id="user-info">Utilisateur : <span id="user-name"><%= @current_user.username %></span></div>
-            <div id="current-date">Date : <span
-                    id="current-date-value"><%= Utilities.french_date_format_by_date(@date_today) %></span></div>
+            <div id="current-date">Date  : <span id="current-date-value"><%= Utilities.french_date_format_by_date(@date_today) %></span></div>
             <div id="user-info">Total heure(s): <span id="user-name"><%= @total_heure %></span></div>
-            <div id="current-date">Nombre de ligne(s) : <span id="current-date-value"><%= length(@my_saisie) %></span>
-            </div>
-
+            <div id="current-date">Nombre de ligne(s) : <span id="current-date-value"><%= length(@my_saisie) %></span></div>
+           
 
         </div>
     </div>
 </div>
 
 
-<div id="table-container" style="max-height: 500px; overflow-y: scroll; width: 100%; margin-top: 20px;">
-    <table id="excel-table" class="table-excel">
-        <thead>
-            <tr>
-                <th style="width: 50px;">Date</th>
-                <th style="width: 50px;">Utilisateur</th>
-                <th style="width: 150px;">
-                    <a href="#" phx-click="sort" phx-value-sort=":project">Projet</a>
-                </th>
-                <th style="width: 50px;">Client</th>
-                <th style="width: 150px;">Tâche</th>
-                <th style="width: 200px;">Libellés</th>
-                <th style="width: 20px;">
-                    <a href="#" phx-click="sort" phx-value-sort=":time_value">Temps</a>
-                </th>
-                <th style="width: 40px;">Actions</th>
-            </tr>
-        </thead>
-        <tbody id="record-table-body">
-            <%= for siaise <- @my_saisie do %>
-            <tr>
-                <td class="align-center"><%= Utilities.simple_date_format(siaise.date_entries) %></td>
-                <td class="align-center"><%= siaise.username %></td>
-                <td class="align-center"><%= siaise.project_title %></td>
-                <td class="align-center"><%= siaise.clients_name %></td>
-                <td class="align-center"><%= siaise.task_title %></td>
-                <td><%= siaise.libele %></td>
-                <td class="align-right"><%= siaise.time_value %></td>
-                <td>
-                    <%= if @is_already_validee == {false , nil } do %>
-                    <i title="modifier" class="bi bi-pencil" phx-click="edit_entrie"
-                        phx-value-entrie_id={siaise.id}></i>
-                    <!-- <i title="Supprimer" class="bi bi-trash" phx-click="delete_entrie" phx-value-entrie_id={siaise.id} ></i> !-->
-                    <% else %>
-                    ---
-                    <% end %>
-                </td>
-            </tr>
-            <% end %>
-        </tbody>
-    </table>
-</div>
-<%= if @is_already_validee == {false , nil } do %>
-<div style="margin-top: 10px;">
-    <a id="addRowIcon" title="Ajouter une ligne" class="btn btn-lg btn-secondary"><i title="Ajouter une ligne"
-            class="bi bi-plus bi-3x" style="cursor: pointer;"></i></a>
-</div>
-<% end %>
 
-<!-- composante de modification des saisie !-->
+<div phx-hook="saisieAction" id="action_area">
 
-<%= live_component(
-            PmLoginWeb.LiveComponent.ModifTimeEntriesComponent,
-            id: "confirm-arch",
-            title: "modifier une etrée" ,
-            body: nil ,
-            entrie: @entrie_to_edit ,
-            entrie_project: @entrie_project ,
-            entrie_task: @entrie_task ,
-            projects: @projects,
-            tasks: @tasks ,
-            project_select_state: @project_select_state ,
-            left_button: "Annuler",
-            left_button_action: "cancel",
-            show_modal: @show_modal
-           
-            
-
-        )
-%>
-
-
-
-<!--
-    ne pas supprimer cette div 
-    div qui est utiliser pour passer des variable requis et constant sur caque ligne de saisie comme la date , les info sur l'utilisateur  , les projet 
+    <div id="table-container" style="max-height: 500px; overflow-y: scroll; width: 100%; margin-top: 20px;">
+        <table id="excel-table" class="table-excel">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">Date</th>
+                    <th style="width: 50px;">Utilisateur</th>
+                    <th style="width: 150px;">
+                        <a href="#" phx-click="sort" phx-value-sort=":project">Projet</a>
+                    </th>
+                    <th style="width: 50px;">Client</th>
+                    <th style="width: 150px;">Tâche</th>
+                    <th style="width: 200px;">Libellés</th>
+                    <th style="width: 20px;">
+                        <a href="#" phx-click="sort" phx-value-sort=":time_value">Temps</a>
+                    </th>
+                    <th style="width: 40px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="record-table-body">
+                <%= for siaise <- @my_saisie do %>
+                <tr>
+                    <td class="align-center"><%= Utilities.simple_date_format(siaise.date_entries) %></td>
+                    <td class="align-center"><%= siaise.username %></td>
+                    <td class="align-center"><%= siaise.project_title %></td>
+                    <td class="align-center"><%= siaise.clients_name %></td>
+                    <td class="align-center"><%= siaise.task_title %></td>
+                    <td><%= siaise.libele %></td>
+                    <td class="align-right"><%= PmLogin.Utilities.format_decimal(to_string(siaise.time_value)) %></td>
+                    <td>
+                        <%= if @is_already_validee == {false , nil } do %>
+                        <i title="modifier" class="bi bi-pencil" phx-click="edit_entrie"
+                            phx-value-entrie_id={siaise.id}></i>
+                        <!-- <i title="Supprimer" class="bi bi-trash" phx-click="delete_entrie" phx-value-entrie_id={siaise.id} ></i> !-->
+                        <% else %>
+                        ---
+                        <% end %>
+                    </td>
+                </tr>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+    <%= if @is_already_validee == {false , nil } do %>
+    <div style="margin-top: 10px;">
+        <a id="addRowIcon" title="Ajouter une ligne" class="btn btn-lg btn-secondary"><i title="Ajouter une ligne"
+                class="bi bi-plus bi-3x" style="cursor: pointer;"></i></a>
+    </div>
+    <% end %>
     
-!-->
-<div id="data-container" data-user-id={@curr_user_id} data-today={@today} data-username={@current_user.username}
-    data-projects={@data_projects} style="display: none;">
+    <!-- composante de modification des saisie !-->
+    
+    <%= live_component(
+                PmLoginWeb.LiveComponent.ModifTimeEntriesComponent,
+                id: "confirm-arch",
+                title: "modifier une etrée" ,
+                body: nil ,
+                entrie: @entrie_to_edit ,
+                entrie_project: @entrie_project ,
+                entrie_task: @entrie_task ,
+                projects: @projects,
+                tasks: @tasks ,
+                project_select_state: @project_select_state ,
+                left_button: "Annuler",
+                left_button_action: "cancel",
+                show_modal: @show_modal
+               
+                
+    
+            )
+    %>
+    
+    
+    
+    <!--
+        ne pas supprimer cette div 
+        div qui est utiliser pour passer des variable requis et constant sur chaque ligne de saisie comme la date , les info sur l'utilisateur  , les projet 
+        
+    !-->
+    <div id="data-container" data-user-id={@curr_user_id} data-today={@today} data-username={@current_user.username}
+        data-projects={@data_projects} style="display: none;">
+    </div>
+
 </div>
+

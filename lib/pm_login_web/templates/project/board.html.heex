@@ -194,6 +194,7 @@
     <div class="col-md-10" id="board_conteneur" style="width: 100%; overflow: auto;">
         <section id="the_board" class="board" phx-hook="Board" style="">
     <%= for stage <- @board.stages do %>
+    <%= if stage.name != "Archivé" do %>
     <div data-stage-id={ stage.id } class={if stage.status_id != 1 do "stage basecontents__without__shadow__and__radius"
     else "stage_first basecontents__without__shadow__and__radius" end}>
     <!-- COLORATION DE LENTETE DES TACHES-->
@@ -221,7 +222,7 @@
         else "stage__cards" end}>
 
         <%= for card <- stage.cards do %>
-        <%= if (card.task.is_valid == true and card.task.status_id != 6 and (@is_admin or @is_attributor or @curr_user_id==card.task.contributor_id) )  do %>
+        <%= if ( card.task.status_id != 6 and (@is_admin or @is_attributor or @curr_user_id==card.task.contributor_id) )  do %>
 
         <div>
           <div data-card-id={ card.id } class={" #{if card.task.status_id ==5 and card.task.clients_request != nil and
@@ -334,7 +335,7 @@
             <div class="column" style="margin-bottom: 5px;">
               <div style="font-size: 10px; text-align: center;">
                 <div style="display: flex;flex-direction: row-reverse;">
-                  <div style="cursor: pointer;">
+                  <div style="cursor: pointer; display: none;">
                     <img title={"#{card.task.attributor.username}"} class="profile-pic-mini-resized" src={
                       Routes.static_path(@socket, "/#{card.task.attributor.profile_picture}" ) } width="50" />
 
@@ -348,7 +349,7 @@
                   <div class="right-button" style="display: flex;flex-direction: row-reverse;">
                     <div  style="cursor: pointer;margin-right: 10px;">
                       <img title={"#{card.task.contributor.username}"} class="profile-pic-mini-resized" src={
-                        Routes.static_path(@socket, "/#{card.task.contributor.profile_picture}" ) } width="50" />
+                        Routes.static_path(@socket, "/profile_pic/#{card.task.contributor.profile_picture}" ) } width="50" />
 
                       <div class="zoom-out"
                         style="font-size: 9px; margin-top: 4px; margin-left: 2px;">
@@ -391,7 +392,7 @@
             </a>-->
 
             <a title="Afficher" style={"display: #{ if card.task.hidden, do: "none !important" };"}
-              class="bi bi-plus plus__icon" href={ Routes.task_path(@socket, :show, card.task.id) }>
+              class="bi bi-eye plus__icon" href={ Routes.task_path(@socket, :show, card.task.id) }> <!--Changed the "+" icon to "eye" detail in tasks monitoring - Ravo -->
             </a>
 
             <%= if @is_attributor or @is_contributor do %>
@@ -443,6 +444,7 @@
         <% end %>
       </ul>
     </div>
+    <% end %>
     <% end %>
   </section>
   </div>
@@ -504,19 +506,20 @@
           task_history: @task_history) %>
 
 
+  <!-- composante du creation de taches  !-->
   <%= live_component(@socket, TaskModalLive, id: "confirm-arch" , title: "Créer tâche" , body: nil, right_button: nil,
     right_button_action: nil, right_button_param: nil, left_button: "Annuler" , left_button_action: "cancel" ,
     task_changeset: @task_changeset, contributors: @contributors, attributors: @attributors, pro_id: @pro_id, show_task_modal: @show_task_modal,
-    is_contributor: @is_contributor, curr_user_id: @curr_user_id) %>
+    is_contributor: @is_contributor, curr_user_id: @curr_user_id , list_admins: @list_admins , is_admin: @is_admin) %>
 
 
 
-
+  <!-- composante du creation de sous  taches  !-->
   <%= live_component(@socket, SecondaryModalLive, id: "confirm-arch" , title: "Créer sous-tâche" , body: nil,
       right_button: nil, right_button_action: nil, right_button_param: nil, left_button: "Annuler" ,
       left_button_action: "cancel-secondary" , task_changeset: @secondary_changeset, contributors: @contributors,
       primaries: @primaries, pro_id: @pro_id, show_secondary: @show_secondary, curr_user_id: @curr_user_id, is_admin: @is_admin,
-      is_attributor: @is_attributor, curr_user_id: @curr_user_id ) %>
+      is_attributor: @is_attributor, curr_user_id: @curr_user_id , list_admins: @list_admins ) %>
 
 
 
@@ -530,14 +533,14 @@
         left_button_action: "cancel-modif" , task_changeset: @task_changeset, pro_id: @pro_id, curr_user_id:
         @curr_user_id, modif_changeset: @modif_changeset, priorities: @priorities, contributors: @contributors, attributors: @attributors,
         is_admin: @is_admin, is_contributor: @is_contributor, is_attributor: @is_attributor, show_modif_menu:
-        @show_modif_menu, card: @card) %>
+        @show_modif_menu, card: @card ) %>
 
   <%= live_component(@socket, ModifModalLive, id: "confirm-arch" , title: "Modifier tâche" , body: nil,
           right_button: nil, right_button_action: nil, right_button_param: nil, left_button: "Retour" ,
           left_button_action: "cancel-modif" , task_changeset: @task_changeset, pro_id: @pro_id, curr_user_id:
           @curr_user_id, modif_changeset: @modif_changeset, priorities: @priorities, contributors: @contributors, attributors: @attributors,
           is_admin: @is_admin, is_contributor: @is_contributor, is_attributor: @is_attributor, show_modif_modal:
-          @show_modif_modal, card: @card) %>
+          @show_modif_modal, card: @card ) %>
 
   <%= live_component(@socket, CommentsModalMenu, id: "confirm-arch" , title: "Commentaires" , body: nil,
             right_button: "Oui" , right_button_action: "arch" , right_button_param: "" , #@arch_id

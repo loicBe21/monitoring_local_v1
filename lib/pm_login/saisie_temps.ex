@@ -406,9 +406,6 @@ defmodule PmLogin.SaisieTemps do
    # end
 
 
-   def test() do
-    Repo.all(TimeEntrie)
-   end
 
 
     def get_entrie_validee_line(date , user_id) do
@@ -446,6 +443,14 @@ defmodule PmLogin.SaisieTemps do
       sql_query =  "SELECT * FROM v_projects_clients_details WHERE project_id = $1"
       params =  [project_id]
       #extract l'entete du list car cette liste return tjr une element
+      hd(SqlUtilities.fetch_result(sql_query , params))
+    end
+
+
+
+    def get_time_spent_per_task(task_id) do
+      sql_query = "SELECT sum(time_value) as time_spent from time_entries where task_id= $1"
+      params = [task_id]
       hd(SqlUtilities.fetch_result(sql_query , params))
     end
 

@@ -273,6 +273,21 @@ defmodule PmLogin.Utilities do
   end
 
 
+ #fonction de formatage d'une nombre donnée en un chaine decimal
+  def format_decimal(value) when is_binary(value) do
+    case Float.parse(value) do
+      {val, _} when is_integer(val) ->
+        "#{val}.0"
+      {val, _} ->
+        "#{val}"
+      :error ->
+        "La valeur n'est pas une décimale valide."
+    end
+  end
+
+
+
+
 
 
 

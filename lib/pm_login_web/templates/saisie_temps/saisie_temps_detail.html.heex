@@ -14,7 +14,7 @@
             <span class="badge badge-orange normal-size">Non validée</span>
             <% end %>
             <span>Date du saisie: <%= Utilities.french_date_format_by_date(@date_saisie_format_date) %> </span>
-            <span>Total heure(s): <%= @total_heure %> </span>
+            <span>Total heure(s): <%= PmLogin.Utilities.format_decimal(to_string(@total_heure)) %> </span>
             <span>Nombre de ligne(s) : <%= length(@my_saisie) %></span>
             <%= if @validation_line != nil  do %>
             <span>Validé par : <%= @validation_line.user_validator %> le
@@ -32,7 +32,7 @@
             phx-value-user_id={@user_saisie.id} phx-value-date={@date_saisie} phx-value-time_value={@total_heure}
             phx-value-user_validator_id={@curr_user_id}>validé</a>
         <% end %>
-        <a href={Routes.saisie_temps_path(@socket, :index_admin1 , start_date: Utilities.parse_date_to_html(@start_date), end_date: Utilities.parse_date_to_html(@end_date), status: @status, right: @right , username: @username )}
+        <a href={Routes.saisie_temps_path(@socket, :index_admin1 , start_date: Utilities.parse_date_to_html(@start_date) , end_date: Utilities.parse_date_to_html(@end_date), status: @status, right: @right , username: @username )}
             class="btn btn-lg btn-secondary"><i class="bi bi-arrow-bar-left"></i>retour</a>
     </div>
 </div>
@@ -53,7 +53,7 @@
         </div>
     </div>
     <div class="my_col" style="text-align: right;"> <!-- Aligner à droite -->
-        <a href={Routes.saisie_temps_path(@socket, :index_admin1 , start_date: Utilities.parse_date_to_html(@start_date), end_date: Utilities.parse_date_to_html(@end_date), status: @status, right: @right , username: @username )}
+        <a href={Routes.saisie_temps_path(@socket, :index_admin1 , start_date: Utilities.parse_date_to_html(@start_date) , end_date: Utilities.parse_date_to_html(@end_date), status: @status, right: @right , username: @username )}
             class="btn btn-lg btn-secondary"><i class="bi bi-arrow-bar-left"></i>retour</a>
     </div>
 
@@ -75,8 +75,7 @@
 <% end %>
 
 
-
-
+<div phx-hook="saisieAction" id="action_area">
 <div id="table-container" style="max-height: 500px; overflow-y: scroll; width: 100%; margin-top: 20px;">
 
     <table id="excel-table" class="table-excel">
@@ -108,7 +107,7 @@
                 <td class="align-center"><%= siaise.clients_name %></td>
                 <td><%= siaise.task_title %></td>
                 <td><%= siaise.libele %></td>
-                <td class="align-right"><%= siaise.time_value %></td>
+                <td class="align-right"><%= PmLogin.Utilities.format_decimal(to_string(siaise.time_value)) %></td>
                 <td class="align-center">
                     <%= if @is_already_validee == {false , nil } do %>
                     <i title="modifier" class="bi bi-pencil" phx-click="edit_entrie"
@@ -174,3 +173,5 @@
 <div id="data-container" data-user-id={@user_saisie.id} data-today={@date_saisie} data-username={@user_saisie.username}
     data-projects={@data_projects} style="display: none;">
 </div>
+</div>
+

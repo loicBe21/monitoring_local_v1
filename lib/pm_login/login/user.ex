@@ -244,7 +244,7 @@ defmodule PmLogin.Login.User do
 
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:username, :email, :password, :function_id, :current_record_id , :phone_number])
+    |> cast(attrs, [:username, :email, :password, :function_id, :current_record_id , :phone_number , :right_id])
     |> validate_required_username
     |> validate_required_password
     |> validate_required_email
@@ -255,7 +255,7 @@ defmodule PmLogin.Login.User do
     |> validate_confirmation(:password, message: "Les mots de passe ne correspondent pas")
     |>validate_format(:phone_number, ~r/\A\d{10}\z/, message: "doit être un numéro de téléphone valide")
     |> crypt_pass
-    |> put_default_right
+    #|> put_default_right
     |> put_default_profile_picture
     |> put_change(:function_id, nil)
   end

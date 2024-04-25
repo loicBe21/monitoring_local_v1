@@ -1,0 +1,819 @@
+<!-- Start Change page details tasks - Ravo -->
+<!-- <p><%= @is_mother_task %></p> -->
+<div phx-hook="showTask" id="showing_task" data-profile={@right_object.title}  >
+  <div class="container" style="/* margin: 0; padding: 0; */">
+    <style>
+      /* Adjust the width of the input */
+      .col-md-3 input.form-control[name="due_date"],
+      .col-md-3 input.form-control[name="start_date"],
+      .col-md-3 input.form-control[name="original_estimate"],
+      .col-md-3 input.form-control[name="time_spent"],
+      .col-md-3 input.form-control[name="progress"] {
+        width: 70%;
+      }
+
+      /* Style the form */
+      #showing_task .container form {
+        background: #f9f9f9;
+        border-radius: 2rem;
+        backdrop-filter: blur(0px);
+        -webkit-backdrop-filter: blur(0px);
+        background: rgba(255, 255, 255, 0.2);
+        /* border: 10px solid rgba(255, 255, 255, .5);
+                box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); */
+        /* box-shadow: 10px 10px 10px rgba(46, 54, 68, 0.03); */
+        /* box-shadow: 0 6px 30px #0069d9; */
+        box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
+          rgba(0, 0, 0, 0.3) 0px 7px 13px -3px,
+          rgba(0, 0, 0, 0.2) 0px -3px 0px inset; /* 3D Effect */
+        opacity: 1;
+        padding: 1rem 4rem 1rem 4rem;
+      }
+
+      /* Width of the first col */
+      #showing_task .container .row .col-md-3 {
+        max-width: calc(100% - 2rem);
+      }
+
+      /* Added top space for the task-title */
+      /* #showing_task .container .row .col-md-3:first-child {
+        padding-top: 16px;
+      } */
+
+      /* Added top space for the due_date*/
+      #showing_task .container .row .col-md-3:nth-child(3) {
+        padding-top: 2px;
+      }
+
+      /* Adjust the widht of the col of button */
+      .row.mt-4 .col-md-8.text-center,
+      .row.mt-4 .col-md-4.text-center {
+        width: 100%;
+      }
+
+      /* Style the title h2 */
+      #showing_task h2 {
+        color: #0069d9;
+        text-decoration: none;
+      }
+
+      /* Style the title h6 */
+      #showing_task h6 {
+        color: #0069d9;
+        font-size: 2rem;
+        text-decoration: none;
+      }
+
+      /* Style the title h2, h6 hover*/
+      #showing_task h2:focus,
+      #showing_task h2:hover,
+      #showing_task h6:focus,
+      #showing_task h6:hover {
+        color: #606c76;
+      }
+
+      /* Style of input, textarea and Historic */
+      #showing_task .container .row .col-md-3 input,
+      #showing_task .container .row .col-md-3 textarea {
+        /* border-radius: 2em; */
+        backdrop-filter: blur(0px);
+        background: rgba(255, 255, 255, 0.2);
+        /* border: 10px solid rgba(255, 255, 255, .5);
+                box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); */
+        -webkit-backdrop-filter: blur(0px);
+        box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset,
+          rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+        font-family: arial;
+        font-size: 1.6rem;
+        height: 5rem;
+      }
+
+      /* Style the label error */
+      #showing_task .container .row .col-md-3 label {
+        color: red;
+        font-size: 1.2rem;
+        margin: -1.8rem 0 2rem;
+        /* visibility: hidden; */
+        width: 70%;
+      }
+
+      /* Style Child_task */
+      #showing_task div#table-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        backdrop-filter: blur(0px);
+        background: rgba(255, 255, 255, 0.2);
+        /* border: 10px solid rgba(255, 255, 255, .5); */
+        border-radius: 16px;
+        /* box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); */
+        -webkit-backdrop-filter: blur(0px);
+        box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
+          rgba(0, 0, 0, 0.3) 0px 7px 13px -3px,
+          rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+      }
+
+      /* Style project and client */
+      #showing_task .container .row .col-md-3 input#project,
+      #showing_task .container .row .col-md-3 input#client,
+      #showing_task .container .row .col-md-3 input#time_spent,
+      #showing_task .container .row .col-md-3 input#status_input,
+      #showing_task .container .row .col-md-3 input#priority_input,
+      #showing_task .container .row .col-md-3 input#attributor_input {
+        backdrop-filter: blur(0px);
+        background: rgb(0 0 0 / 5%);
+        -webkit-backdrop-filter: blur(0px);
+        box-shadow: none;
+        box-sizing: border-box;
+        /* width: 100%; */
+      }
+
+      /* Style History div */
+      #showing_task .stage_history_show  {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        backdrop-filter: blur(0px);
+        background: rgba(255, 255, 255, 0.2);
+        /* border: 10px solid rgba(255, 255, 255, .5); */
+        border-radius: 16px;
+        /* box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); */
+        -webkit-backdrop-filter: blur(0px);
+        box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
+          rgba(0, 0, 0, 0.3) 0px 7px 13px -3px,
+          rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+        margin: 0;
+        /* min-height: 20rem;
+        max-height: 60rem;
+        min-width: 40rem; */
+      }
+
+      /* Start Style Button */
+      /* Normal text in button */
+      #showing_task .col-md-8.text-center button,
+      #showing_task .col-md-4.text-center button,
+      #showing_task .col-md-4.text-center input#save {
+        height: 5rem;
+        text-transform: none;
+        align-items: center;
+        appearance: none;
+        background-image: radial-gradient(
+          100% 100% at 100% 0,
+          #5adaff 0,
+          #5468ff 100%
+        );
+        border: 0;
+        border-radius: 6px;
+        box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,
+          rgba(45, 35, 66, 0.3) 0 7px 13px -3px,
+          rgba(58, 65, 111, 0.5) 0 -3px 0 inset;
+        box-sizing: border-box;
+        color: #fff;
+        cursor: pointer;
+        display: inline-flex;
+        font-family: "JetBrains Mono", monospace;
+        justify-content: center;
+        line-height: 1;
+        list-style: none;
+        overflow: hidden;
+        padding-left: 16px;
+        padding-right: 16px;
+        position: relative;
+        text-align: left;
+        text-decoration: none;
+        transition: box-shadow 0.15s, transform 0.15s;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        white-space: nowrap;
+        will-change: box-shadow, transform;
+        font-size: 18px;
+      }
+
+      /* Background button cancel */
+      #showing_task .col-md-4.text-center button#cancel {
+        background-image: radial-gradient(
+          100% 100% at 100% 0,
+          #ffc107 0,
+          #dc3545 100%
+        );
+      }
+
+      /* Margin-bottom button save */
+      #showing_task .col-md-4.text-center input#save {
+          margin-bottom: 1rem;
+      }
+
+      /* Button focus effect */
+      #showing_task .col-md-8.text-center button:focus,
+      #showing_task .col-md-4.text-center button:focus {
+        box-shadow: #3c4fe0 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px,
+          rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #3c4fe0 0 -3px 0 inset;
+      }
+
+      /* Button hover effect */
+      #showing_task .col-md-8.text-center button:hover,
+      #showing_task .col-md-4.text-center button:hover, 
+      #showing_task .col-md-4.text-center input:hover {
+        box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px,
+          rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #3c4fe0 0 -3px 0 inset;
+        transform: translateY(-2px);
+      }
+
+      /* Button cancel hover effect */
+      #showing_task .col-md-4.text-center button#cancel:hover {
+        box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #a90010 0 -3px 0 inset;
+      }
+
+      /* Button active effect */
+      #showing_task .col-md-8.text-center button:active,
+      #showing_task .col-md-4.text-center button:active {
+        box-shadow: #3c4fe0 0 3px 7px inset;
+        transform: translateY(2px);
+      }
+
+      /* Padding button retour */
+      #showing_task .board-retour {
+        padding-bottom: 1rem;
+      }
+
+      /* End Style Button */
+
+      /* Disappear button save and cancel */
+      #showing_task .col-md-4.text-center input#save,
+      #showing_task .col-md-4.text-center button#cancel {
+        display: contents;
+        cursor: default;
+      }
+
+      /* Disappear button modify */
+      #showing_task .col-md-4.text-center button#modify {
+        display: inline-block;
+        cursor: pointer;
+      }
+
+
+      /* Start respons */
+      @media screen and (max-width: 3680px) {
+        /* Height of the container */
+        #showing_task .container form {
+          height: 88%;
+        } 
+
+        /* Padding of all the column */
+        #showing_task .container .row .col-md-3 {
+          padding-right: 20rem;
+        }
+
+        /* Width of the first col */
+        #showing_task .container .row .col-md-3:first-child {
+          width: 160vh;
+        }
+
+        /* Width of the second and last col */
+        #showing_task .container .row .col-md-3:nth-child(2),
+        #showing_task .container .row .col-md-3:last-child {
+          min-width: 93vh;
+        }
+
+        /* Margin and Width of the third col */
+        #showing_task .container .row .col-md-3:nth-child(3) {
+          margin-right: -8rem;
+          min-width: 50vh;
+        }
+
+        /* Space-between every input, textarea */
+        #showing_task .container .row .col-md-3 div {
+          /* padding-bottom: 2rem; */
+        }
+
+        /* Side by side the block status and priority */
+         #showing_task .container .row .col-md-3 .info {
+            display: flex; /* Use flexbox for layout */
+            justify-content: space-between; /* Space the items evenly */
+        }
+
+        /* Style the block status and priority */
+        #showing_task  .status, #showing_task .priority {
+          width: 45%; /* Adjust width as needed */
+        }
+
+        /* Center history-content */
+        #showing_task .history-content {
+          /* padding-left: 2rem; */
+        }
+
+        /* Width of stage_history_show */
+        #showing_task div.stage_history_show {
+          margin-bottom: -6vh;
+          max-height: 72vh;
+          min-height: 72vh;
+          min-width: 90vh;
+          width: 100%;
+        }
+        
+         /* Padding top button */
+        #showing_task .container .row.mt-4 {
+          padding: 2rem;
+        }
+        
+        /* Padding between the col of button */
+         #showing_task .container .row.mt-4 .col-md-8.text-center {
+          padding-right: 41%;
+        }
+
+        /* Adjust the size of the button "Créer une sous-Tâche*/
+        /* #showing_task .col-md-8.text-center button {
+            height: 12vh;
+            line-height: 4rem;
+            text-wrap: pretty;
+            width: 18vh;
+        } */
+
+        /* Start with child_task */
+        /* Style task_description */
+        #showing_task .container .row .col-md-3 textarea#task_description {
+          /* height: 20rem; */
+          resize: none;
+        }
+        /* End with child_task */
+      }
+
+      @media screen and (max-width: 2560px) {
+        /* Height of the container */
+        #showing_task .container form {
+          height: 92%;
+        }
+
+        /* Width of stage_history_show */
+        #showing_task div.stage_history_show {
+          margin-bottom: -9vh;
+          margin-left: -6vh;
+          max-height: 82vh;
+          min-height: 82vh;
+        }
+      }
+
+      @media screen and (max-width: 1920px) {
+        /* Height of the container */
+        #showing_task .container form {
+          height: 91%;
+        }
+
+        /* Width of stage_history_show */
+        #showing_task div.stage_history_show {
+          max-height: 78vh;
+          min-height: 78vh;
+        }
+
+        /* Space-between every input, textarea */
+        #showing_task .container .row .col-md-3 div {
+          padding-bottom: 0rem;
+        }
+
+        /* Erase the margin-bottom of the first column */
+        #showing_task .container .row .col-md-3:first-child label {
+            margin-bottom: 0rem;
+        }
+      }
+
+      @media screen and (max-width: 1680px) {
+        /* Erase the margin-bottom of input and textarea */
+        #showing_task .container .row .col-md-3:first-child input, 
+        #showing_task .container .row .col-md-3:first-child textarea {
+            margin-bottom: 0rem;
+        }
+
+        /* Padding between the col of button */
+        .row.mt-4 .col-md-8.text-center {
+          padding-right: 0%;
+        }
+
+        /* Width of stage_history_show */
+        #showing_task div.stage_history_show {
+          max-height: 77vh;
+          min-height: 77vh;
+        }
+      }
+
+      @media screen and (max-width: 1600px) {
+        /* EraAddese the margin-bottom of input and textarea */
+        #showing_task .container .row .col-md-3:first-child input, 
+        #showing_task .container .row .col-md-3:first-child textarea {
+            margin-bottom: 0rem;
+        }
+
+        /* Width of stage_history_show */
+        #showing_task div.stage_history_show {
+          margin-left: -10vh;
+          min-width: 40vh;
+        }
+
+        /* Height of the container */
+        #showing_task .container form {
+          height: 100%;
+          width: 111%;
+        }
+      }
+
+      @media screen and (min-width: 1440px) {
+
+      }
+
+      @media screen and (min-width: 1440px) {
+
+      }
+
+      @media screen and (min-width: 1440px) {
+
+      }
+
+      @media screen and (min-width: 1440px) {
+
+      }
+
+      /* End respons */
+
+    </style>
+    <form phx-submit = "modify_task">
+      <input type = "hidden" value={@curr_user_id} name="curr_user">
+      <input type = "hidden" value={@project.id} name="pro_id">
+      <input type = "hidden" value={@task.status.id} name="status_id">
+      <input type = "hidden" value={@task.priority.id} name="priority_id">
+      <input type = "hidden" value={@task.deadline} name="task_deadline">
+
+      <!-- Start Button Retour - Ravo-->
+      <div class="board-retour" style="display: flex; flex-direction: row-reverse;">
+        <span><a href={ Routes.project_path(@socket, :board , @project.id) } class="btn btn-lg btn-secondary"><i class="bi bi-arrow-bar-left"></i> Retour</a></span>
+      </div>
+      <!-- End Button Retour - Ravo-->
+
+      <div class="row">
+        <!-- First Column -->
+        <div class="col-md-3">
+          <div class="task_title">
+            <h6>Tâches</h6>
+            <input
+              type="text"
+              class="form-control mb-3"
+              id="task_title"
+              name="task_title"
+              placeholder="TITRE DE LA TACHE"
+              value={@task.title}
+            />
+            <label id="task_title_error" style="visibility: hidden;">La date d'échéance ne peut pas être antérieure à la date de début</label>
+          </div>
+          <div class="task_description">
+            <h6>Description</h6>
+            <textarea
+              class="form-control mb-3"
+              id="task_description"
+              row="5"
+              name="task_description"
+              placeholder="Description de la tâche"
+              value={@task.description}
+            ><%= @task.description %></textarea>
+            <label id="task_description_error" style="visibility: hidden;">La date d'échéance ne peut pas être antérieure à la date de début</label>
+          </div>
+
+          <div class="info">
+            <div class="status">
+              <h6>Statut</h6>
+              <input
+                type="text"
+                class="form-control mb-3"
+                id="status_input"
+                name="status"
+                placeholder=""
+                value={@task.status.title}
+              />
+              <label id="status_error" style="visibility: hidden;">Error details task info status</label>
+            </div>
+            <div class="priority">
+              <h6>Priorité</h6>
+              <input
+                type="text"
+                class="form-control mb-3"
+                id="priority_input"
+                name="priority"
+                placeholder=""
+                value={@task.priority.title}
+              />
+              <label id="priority_error" style="visibility: hidden;">Error details task info priority</label>
+            </div>
+          </div>
+
+          <%= if @is_mother_task == true do %>
+          <div class="parent_task" style="/* padding-bottom: 15vh; */">
+            <h6>Tâche mère</h6>
+            <select
+              id="parent_task"
+              name="parent_task]"
+              style="
+                width: -webkit-fill-available;
+                width: -moz-available;
+                height: 5rem;
+              "
+            >
+              <option value="1364" selected=""><%= @task.parent.title %></option>
+            </select>
+            <label id="parent_task_error" style="visibility: hidden;">La date d'échéance ne peut pas être antérieure à la date de début</label>
+          </div>
+          <% else %>
+          <div class="child_task">
+            <h6>Tâche fille</h6>
+            <div
+              id="table-container"
+              style="
+                padding: 0 1rem 0 0;
+                min-height: 20vh;
+                max-height: 20vh;
+                overflow-y: scroll;
+                width: 100%;
+              "
+            >
+              <!--  Fixed the header - Ravo -->
+              <table
+                class="child_task_table"
+                id="child_task_table"
+                style="
+                  margin-bottom: 0;
+                  max-height: 30vh;
+                  overflow-y: scroll;
+                  width: 100%;
+                "
+              >
+                <thead
+                  style="
+                    background-color: #f9f9f9;
+                    position: sticky;
+                    top: 0;
+                    z-index: 1;
+                  "
+                >
+                  <tr>
+                    <th style="font-size: 12px">Nom</th>
+                    <th style="font-size: 12px">Attributeur</th>
+                    <th style="font-size: 12px">Contributeur</th>
+                    <th style="font-size: 12px">Progression</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <%= for task <- @task.children do %>
+                  <tr>
+                    <td style="font-size:12px"><%= task.title %></td>
+                    <td style="font-size:12px"><%= PmLogin.Login.get_user!(task.attributor_id).username %></td>
+                    <td style="font-size:12px"><%= if is_nil(task.contributor_id) do %>
+                      <%= PmLogin.Login.get_user!(task.attributor_id).username %>
+                      <% else %>
+                      <%= PmLogin.Login.get_user!(task.contributor_id).username %>
+                      <% end %>
+                    </td>
+                    <td style="font-size:12px"><%= task.progression %></td>
+                  </tr>
+                  <%= end %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <% end %>
+          
+        </div>
+        <!-- Second Column -->
+        <div class="col-md-3">
+          <div class="project">
+            <h6>Projet</h6>
+            <input
+              type="text"
+              class="form-control mb-3"
+              id="project"
+              name="project"
+              placeholder=""
+              value={@project.title}
+            />
+            <label id="project_error" style="visibility: hidden;">La date d'échéance ne peut pas être antérieure à la date de début</label>
+          </div>
+          <div class="client">
+            <h6>Client</h6>
+            <input
+              type="text"
+              class="form-control mb-3"
+              id="client"
+              name="client"
+              placeholder=""
+              value={@client.clients_name}
+            />
+            <label id="client_error" style="visibility: hidden;">La date d'échéance ne peut pas être antérieure à la date de début</label>
+          </div>
+          <div class="attributor">
+            <h6>Attributeur</h6>
+            <input
+              type="text"
+              class="form-control mb-3"
+              id="attributor_input"
+              name="client"
+              placeholder=""
+              value={PmLogin.Login.get_user!(@task.attributor_id).username}
+            />
+            <label id="attributor_error" style="visibility: hidden;">La date d'échéance ne peut pas être antérieure à la date de début</label>
+          </div>
+          <div class="assigned_person">
+            <h6>Personne(s) assignée(s)</h6>
+          
+            <select
+              id="assigned_person"
+              name="assigned_person"
+              style="
+                width: -webkit-fill-available;
+                width: -moz-available;
+                height: 5rem;
+              "
+            >
+               <%= if @is_admin or @is_attributor do %>
+                <%= if @is_admin do %>
+                  <option value={@current_contributor.id}><%= @current_contributor.username %></option>
+                  <%= for {username, id} <- @list_for_admin do %>
+                    <%= if id != @card.task.contributor_id do %>
+                    <option value={id} ><%= username %></option>
+                    <% end %>
+                  <% end %>
+                <% else %>
+                  <%= for {username, id} <- @list_for_attributeur do %>
+                    <option value={id}><%= username %></option>
+                  <% end %>
+                <% end %>
+               <% else %>
+                  <%= if !is_nil(@card.task.contributor_id) do %>
+                     <option value={@current_contributor.id}><%= @current_contributor.username %></option>
+                  <% end %>
+               <% end %>
+            </select>
+            <label id="assigned_person_error" style="visibility: hidden;">La date d'échéance ne peut pas être antérieure à la date de début</label>
+          </div>
+        </div>
+        <!-- Third Column -->
+        <div class="col-md-3">
+          <div class="start_date">
+            <h6>Date de début</h6>
+            <input
+              type="date"
+              class="form-control mb-3"
+              id="start_date"
+              name="start_date"
+              value={@task.date_start}
+            />
+            <label id="start_date_error" style="visibility: hidden;">La date d'échéance ne peut pas être antérieure à la date de début</label>
+          </div>
+          <div class="due_date">
+            <h6>Date d'échéance</h6>
+            <input
+              type="date"
+              class="form-control mb-3"
+              id="due_date"
+              name="due_date"
+              value={@task.deadline}
+            />
+            <label id="due_date_error"style="visibility: hidden;">La date d'échéance ne peut pas être antérieure à la date de début</label>
+          </div>
+          
+          <div class="original_estimate">
+            <h6>Estimation originale</h6>
+            <input
+              type="number"
+              class="form-control mb-3"
+              id="estimation_val"
+              name="original_estimate"
+              value={@task_estimation_in_hours}
+              step="any"
+            />
+            <span class="infotext">heures</span>
+            <label id="original_estimate_error" style="visibility: hidden;">La date d'échéance ne peut pas être antérieure à la date de début</label>
+          </div>
+          <div class="time_spent">
+            <h6>Temps passé</h6>
+            <input
+              type="number"
+              class="form-control mb-3"
+              id="time_spent"
+              name="time_spent"
+              placeholder=""
+              value={@time_spent.time_spent}
+            />
+            <span class="infotext">heures</span>
+            <label id="time_spent_error" style="visibility: hidden;">La date d'échéance ne peut pas être antérieure à la date de début</label>
+          </div>
+          <div class="progress">
+            <h6>Avancement</h6>
+            <input
+              type="number"
+              class="form-control"
+              id="progress"
+              name="progress"
+              value={@task.progression}
+            />
+            <span class="infotext">(%)</span>
+            <label id="progress_error" style="visibility: hidden;">La date d'échéance ne peut pas être antérieure à la date de début</label>
+          </div>
+        </div>
+        <!-- Fourth Column -->
+        <div
+          class="col-md-3"
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-right: 0;
+          "
+        >
+          <h2>Historiques</h2>
+          <div class="history">
+            <div class="history-content">
+              <!-- Display history content here -->
+              <div class="stage_history_show" style="background-color: #fff;">
+                <div style="height: 100%; padding-left: 15px;padding-right: 10px; width: 100%;">
+                  <div style={" display: inline-block; color: #fff; margin: 5px 0 5px 0; font-size: 10px;background:#031d2e; "}
+                      >
+                    </div>
+                  <%= if not is_nil(@tasks_history) do %>
+                  <%= for task_history <- @tasks_history do %>
+                  <div style="display: flow-root list-item; margin-bottom: 3px; /* font-size: 10px;*/ margin-left:13px">
+                    <p style="display: inline;"><%= task_history.intervener.username%></p>
+                    <p style="display: inline;"> - </p>
+                    <p style="word-wrap: anywhere; color: #727272; display: inline;">
+                      <%= Utilities.simple_date_format_with_hours_onboard(task_history.inserted_at) %>
+                    </p>
+                  </div>
+                  <div class="card__name" style="/* font-size: 11px; */ margin-left:4rem">
+                    <a href={ Routes.task_path(@socket, :show, task_history.task.id) }><%= task_history.task.title %></a>
+                  </div>
+                  <p style="font-size: 11px; margin-left:4rem">
+                    <%= task_history.status_from.title %> &#x2192; <%= task_history.status_to.title %>
+                  </p>
+                  <%= if not is_nil(task_history.reason) do %>
+                  <p style="font-size: 11px; color: #727272;margin-left:13px">
+                    <b style="color: #000; text-decoration:underline;">Motif</b> : <%= task_history.reason %>
+                  </p>
+                  <% end %>
+                  <hr style="border-top: 0.1rem solid #b9bcbf!important;">
+                  <% end %>
+                  <% end %>
+
+
+                  <div style="display: flow-root list-item; margin-bottom: 3px;/* font-size: 10px; */ margin-left:13px">
+                    <p style="word-wrap: anywhere; color: #727272; display: inline;">
+                      <%= Utilities.simple_date_format_with_hours_onboard(@task.inserted_at) %>
+                    </p>
+                  </div>
+                  <div class="card__name" style="/* font-size: 11px; */ margin-left:4rem">
+                    <a href={ Routes.task_path(@socket, :show, @task.id) }><%= @task.title %></a>
+                  </div>
+                  <p style="font-size: 11px; margin-left:4rem">
+                    Créé
+                  </p>
+                  <hr style="border-top: 0.1rem solid #b9bcbf!important;">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Buttons -->
+      <div class="row mt-4">
+        <div class="col-md-8 text-center">
+          <button
+            type="button"
+            id="sub_task"
+            class="btn btn-primary mr-2"
+            phx-click="show_modal"
+          >
+            Créer une sous-Tâche
+          </button>
+        </div>
+        <div class="col-md-4 text-center">
+          <input type="submit" id="save" class="btn btn-primary mr-2"
+           value="Enregistrer" name="save"
+          >
+          <button type="button" id="modify" class="btn btn-primary mr-2">
+            Modifier
+          </button>
+          <button type="button" id="cancel" class="btn btn-danger">
+            Annuler
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <!-- End Change page details tasks - Ravo -->
+
+
+</div>
+  <!-- composante du creation de sous  taches  !-->
+  <%= live_component(@socket, PmLoginWeb.LiveComponent.SecondaryModalLive1, id:
+  "confirm-arch" , title: "Créer sous-tâche" , body: nil, right_button: nil,
+  right_button_action: nil, right_button_param: nil, left_button: "Annuler" ,
+  left_button_action: "cancel-secondary" , task_changeset: @secondary_changeset,
+  contributors: @contributors, pro_id: @task.project_id, show_secondary:
+  @show_secondary, curr_user_id: @curr_user_id, is_admin: @is_admin,
+  is_attributor: @is_attributor, curr_user_id: @curr_user_id , list_admins:
+  @list_admins , parent_task: @task ) %>
+

@@ -23,7 +23,7 @@
 
 
 .table-container {
-    /* max-height: 800px; */
+   /* max-height: 800px; */
     /* Ajustez la hauteur maximale selon vos besoins */
     overflow-y: auto;
     /* Ajoute une barre de défilement verticale lorsque le contenu dépasse */
@@ -66,10 +66,9 @@
     background-color: #f2f2f2;
     border: 1px solid #ddd;
     padding: 8px;
-    text-align: center;
-    /* Center the heading table - Ravo */
+    text-align: center; /* Center the heading table - Ravo */
     height: 15px;
-    /* Définissez la hauteur de l'entête */
+        /* Définissez la hauteur de l'entête */
 }
 
 /* Start Ravo Modification */
@@ -89,7 +88,6 @@
     display: initial;
     margin: 0;
 }
-
 /* Screen SM */
 @media (min-width: 568px) {
     .body-bg main#main .my_row .my_col #header div {
@@ -103,7 +101,6 @@
     .body-bg main#main {
         padding: 50px 0 0 0 !important;
     }
-
     .body-bg main#main .my_row .my_col #header div {
         font-size: 1.4rem;
         padding: 0 32px;
@@ -141,7 +138,6 @@
         padding: 0 140px;
     }
 }
-
 /* End Responsive 'user_info'*/
 
 /* Start 'table-container'*/
@@ -149,8 +145,7 @@
 /* Select overflow input projet */
 /* #main #table-container {
     overflow-y: visible !important;
-} */
-/*Disable scroll saisie de temps */
+} */ /*Disable scroll saisie de temps */
 
 /* Size input project */
 #table-container .table-excel #record-table-body tr td .ts-wrapper {
@@ -183,13 +178,11 @@
 
 /* Screen SM */
 @media (min-width: 568px) {
-
     /* Max-height table-container, change in need */
     #main div#table-container {
         /* height: 20rem; */
         margin-top: 0 !important;
-        /* max-height: 73% !important; */
-        /* Disable the max for browser firefox */
+        /* max-height: 73% !important; */ /* Disable the max for browser firefox */
     }
 
     /* Margin-bottom between the table and the plus icon */
@@ -231,11 +224,10 @@
     #table-container .table-excel #record-table-body tr td .ts-wrapper .ts-control {
         width: 31rem;
     }
-}
+}   
 
 /* Screen MD */
 @media (min-width: 768px) {
-
     /* Size for every select drop-down: projet and task */
     #table-container .table-excel #record-table-body .ts-wrapper .ts-dropdown div.ts-dropdown-content {
         max-height: 16rem;
@@ -244,7 +236,6 @@
 
 /* Screen MDL */
 @media (min-width: 992px) {
-
     /* Margin-bottom between the table and the plus icon */
     #main #table-container .table-excel {
         margin-bottom: 16%;
@@ -274,7 +265,6 @@
 
 /* Screen L */
 @media (min-width: 1024px) {
-
     /* Margin-bottom between the table and the plus icon */
     #main #table-container .table-excel {
         margin-bottom: 15%;
@@ -283,7 +273,6 @@
 
 /* Screen XL */
 @media (min-width: 1280px) {
-
     /* Margin-bottom between the table and the plus icon */
     #main #table-container .table-excel {
         margin-bottom: 12%;
@@ -322,7 +311,6 @@
 
 /* Screen XLMD */
 @media (min-width: 1440px) {
-
     /* Margin-bottom between the table and the plus icon */
     #main #table-container .table-excel {
         margin-bottom: 11%;
@@ -346,7 +334,6 @@
 
 /* Screen XXLMD */
 @media (min-width: 1680px) {
-
     /* Margin-bottom between the table and the plus icon */
     #main #table-container .table-excel {
         margin-bottom: 9%;
@@ -375,7 +362,6 @@
 
 /* Screen XXL */
 @media (min-width: 1920px) {
-
     /* Margin-bottom between the table and the plus icon */
     #main #table-container .table-excel {
         margin-bottom: 8%;
@@ -404,12 +390,11 @@
 
 /* Screen 2200px */
 @media (min-width: 2200px) {
-
     /* Margin-bottom between the table and the plus icon */
     #main #table-container .table-excel {
         margin-bottom: 7%;
     }
-
+    
     /* Max-height table-container, change in need */
     #main div#table-container {
         max-height: 77% !important;
@@ -418,7 +403,6 @@
 
 /* Screen 2400px */
 @media (min-width: 2400px) {
-
     /* Max-height table-container, change in need */
     #main div#table-container {
         max-height: 79% !important;
@@ -428,7 +412,6 @@
 
 /* Screen 2560px */
 @media (min-width: 2560px) {
-
     /* Margin-bottom between the table and the plus icon */
     #main #table-container .table-excel {
         margin-bottom: 6%;
@@ -447,7 +430,6 @@
 
 /* Screen 3680px */
 @media (min-width: 3680px) {
-
     /* Margin-bottom between the table and the plus icon */
     #main #table-container .table-excel {
         margin-bottom: 4%;
@@ -495,94 +477,93 @@
     /* .boardcontainer table#tb-auth thead tr th:nth-child(2) {
         width: 27%;
     } */
-
+    
     /* Adjust the size of the header Prog */
     /* .boardcontainer table#tb-auth thead tr th:nth-child(3) {
         width: 3% !important;
     } */
-
+    
     /* Adjust the size of the header Date de début */
     /* .boardcontainer table#tb-auth thead tr th:nth-child(4) { */
-    /* width: 8% !important; */
-}
-
-/* Adjust the size of the header Date de fin et Durée accompli */
-/* .boardcontainer table#tb-auth thead tr th:nth-child(5), .boardcontainer table#tb-auth thead tr th:nth-child(7) {
+        /* width: 8% !important; */
+    }
+    
+    /* Adjust the size of the header Date de fin et Durée accompli */
+    /* .boardcontainer table#tb-auth thead tr th:nth-child(5), .boardcontainer table#tb-auth thead tr th:nth-child(7) {
         width: 5% !important;
     } */
 
-/* Adjust the size of the header Durée estimée et Date d'échéance */
-/* .boardcontainer table#tb-auth thead tr th:nth-child(6), .boardcontainer table#tb-auth thead tr th:nth-child(8) { */
-/* width: 7% !important; */
-/* } */
+    /* Adjust the size of the header Durée estimée et Date d'échéance */
+    /* .boardcontainer table#tb-auth thead tr th:nth-child(6), .boardcontainer table#tb-auth thead tr th:nth-child(8) { */
+        /* width: 7% !important; */
+    /* } */
 
-/* Adjust the size of the header Client */
-/* .boardcontainer table#tb-auth thead tr th:nth-child(9) {
+    /* Adjust the size of the header Client */
+    /* .boardcontainer table#tb-auth thead tr th:nth-child(9) {
         width: 12% !important;
     } */
 
-/* Overflow the tbody when reach a certain height */
-/* .boardcontainer table#tb-auth tbody {
+    /* Overflow the tbody when reach a certain height */
+    /* .boardcontainer table#tb-auth tbody {
         display: block;
         height: 68rem;
         overflow: auto; */
-/* width: 1000%; */
-/* } */
-
-/* Adjust the size of the body Nom */
-/* .boardcontainer table#tb-auth tbody tr td:nth-child(1) {
+        /* width: 1000%; */
+    /* } */
+    
+    /* Adjust the size of the body Nom */
+    /* .boardcontainer table#tb-auth tbody tr td:nth-child(1) {
         width: 21%;
     } */
-
-/* Adjust the size of the body Description */
-/* .boardcontainer table#tb-auth tbody tr td:nth-child(2) {
+    
+    /* Adjust the size of the body Description */
+    /* .boardcontainer table#tb-auth tbody tr td:nth-child(2) {
         width: 31%;
     } */
-
-/* Adjust the size of the body Prog and Durée accompli*/
-/* .boardcontainer table#tb-auth tbody tr td:nth-child(3), .boardcontainer table#tb-auth tbody tr td:nth-child(7) {
+    
+    /* Adjust the size of the body Prog and Durée accompli*/
+    /* .boardcontainer table#tb-auth tbody tr td:nth-child(3), .boardcontainer table#tb-auth tbody tr td:nth-child(7) {
         width: 4%;
     } */
-
-/* Adjust the size of the body Date de début,  Date de fin, Durée estimée, Date d'échéance and Client */
-/* .boardcontainer table#tb-auth tbody tr td:nth-child(4), .boardcontainer table#tb-auth tbody tr td:nth-child(5), .boardcontainer table#tb-auth tbody tr td:nth-child(6), .boardcontainer table#tb-auth tbody tr td:nth-child(8), .boardcontainer table#tb-auth tbody tr td:nth-child(9) {
+    
+    /* Adjust the size of the body Date de début,  Date de fin, Durée estimée, Date d'échéance and Client */
+    /* .boardcontainer table#tb-auth tbody tr td:nth-child(4), .boardcontainer table#tb-auth tbody tr td:nth-child(5), .boardcontainer table#tb-auth tbody tr td:nth-child(6), .boardcontainer table#tb-auth tbody tr td:nth-child(8), .boardcontainer table#tb-auth tbody tr td:nth-child(9) {
         width: 8%;
     } */
 
-/* Make the header to a static position */
+    /* Make the header to a static position */
 /* } */
 
 /* End Responsive Page Project admin */
 /* End  Page Project admin */
 
 /* Start Page Saisie de temps admin */
-/* Space-between my_col */
-#main .my_row .my_row .my_col {
-    padding: 0 4rem;
+    /* Space-between my_col */
+    #main .my_row .my_row .my_col {
+        padding: 0 4rem;
 }
 
-/* Display of the Title my_col*/
-#main .my_row .my_row .my_col {
-    display: inline-flex;
+    /* Display of the Title my_col*/
+    #main .my_row .my_row .my_col {
+        display: inline-flex;
 }
 
-/* Center the filter submit */
-#main .my_row .my_row .my_col input[type="submit"] {
+    /* Center the filter submit */
+    #main .my_row .my_row .my_col input[type="submit"] {
     align-items: center;
     display: flex;
     flex-direction: column;
     width: 90px;
 }
 
-/* Position the title #espace_admin to left side */
-/* .body-bg .container #espace_admin {
+    /* Position the title #espace_admin to left side */
+    /* .body-bg .container #espace_admin {
     display: block;
 } */
 
 /* Start Responsive Saisie de temps admin */
 /* Screen S */
 @media (min-width: 320px) {
-
     /* Size of the badge-green cell */
     .table-excel #record-table-body .badge-cell span.badge-green {
         width: 100%;
@@ -638,7 +619,6 @@
 
 /* Screen 400px */
 @media (min-width: 400px) {
-
     /* Reduce the width of the my_col header */
     .body-bg .container .my_row .my_col #header {
         flex-direction: row;
@@ -647,7 +627,6 @@
 
 /* Screen SM */
 @media (min-width: 568px) {
-
     /* Size of the Title my_row*/
     #main .my_row .my_row {
         align-items: center;
@@ -670,7 +649,6 @@
 
 /* Screen 630px */
 @media (min-width: 630px) {
-
     /* Size of the badge-green cell */
     .table-excel #record-table-body .badge-cell span.badge-green {
         width: 96%;
@@ -679,7 +657,6 @@
 
 /* Screen 660px */
 @media (min-width: 660px) {
-
     /* Size of the badge-green cell */
     .table-excel #record-table-body .badge-cell span.badge-green {
         width: 90%;
@@ -689,7 +666,6 @@
 
 /* Screen 700px */
 @media (min-width: 700px) {
-
     /* Size of the badge-green cell */
     .table-excel #record-table-body .badge-cell span.badge-green {
         width: 80%;
@@ -703,16 +679,14 @@
 
 /* Screen MD */
 @media (min-width: 767px) {
-
     /* Size of the badge-green cell */
-    .table-excel #record-table-body .badge-cell span.badge-green {
+     .table-excel #record-table-body .badge-cell span.badge-green {
         width: 70%;
     }
 }
 
 /* Screen MD */
 @media (min-width: 768px) {
-
     /* Padding of the Title my_col*/
     #main .my_row .my_row .my_col {
         padding: 0.4rem 2rem;
@@ -721,18 +695,16 @@
 
 /* Screen 800px */
 @media (min-width: 800px) {
-
     /* Size of the badge-green cell */
-    .table-excel #record-table-body .badge-cell span.badge-green {
+     .table-excel #record-table-body .badge-cell span.badge-green {
         width: 64%;
     }
 }
 
 /* Screen 1024px */
 @media (min-width: 1024px) {
-
     /* Size of the badge-green cell */
-    .table-excel #record-table-body .badge-cell span.badge-green {
+     .table-excel #record-table-body .badge-cell span.badge-green {
         width: 50%;
     }
 
@@ -744,9 +716,8 @@
 
 /* Screen 1280px */
 @media (min-width: 1280px) {
-
     /* Size of the badge-green cell */
-    .table-excel #record-table-body .badge-cell span.badge-green {
+     .table-excel #record-table-body .badge-cell span.badge-green {
         width: 35%;
     }
 
@@ -758,7 +729,6 @@
 
 /* Screen L */
 @media (min-width: 1440px) {
-
     /* Padding of the date input column */
     #main .my_row .my_row .my_col {
         padding: 0.4rem 1.2rem;
@@ -777,7 +747,6 @@
 
 /* Screen XL*/
 @media (min-width: 1680px) {
-
     /* Padding of the date input column */
     #main .my_row .my_row .my_col {
         padding: 0.4rem 3.2rem;
@@ -791,23 +760,21 @@
 
 /* Screen XXL */
 @media (min-width: 1920px) {
-
     /* Padding of the date input column */
     #main .my_row .my_row .my_col {
         padding: 0.4rem 3.2rem;
     }
 
-    /* Size of the badge-green cell */
-    .table-excel #record-table-body .badge-cell span.badge-green {
+     /* Size of the badge-green cell */
+     .table-excel #record-table-body .badge-cell span.badge-green {
         width: 23%;
     }
 }
 
 /* Screen 2560px */
 @media (min-width: 2560px) {
-
     /* Size of the badge-green cell */
-    .table-excel #record-table-body .badge-cell span.badge-green {
+     .table-excel #record-table-body .badge-cell span.badge-green {
         width: 17%;
     }
 }
@@ -842,7 +809,7 @@
     display: block;
     height: 68rem;
     overflow: auto; */
-/* width: 1000%; */
+    /* width: 1000%; */
 /* }
 
 .container table.table-list-users tbody tr {
@@ -860,7 +827,6 @@
 
 /* Screen 640px */
 @media (min-width: 640px) {
-
     /* Align all the row mobile in column */
     .container .mobile-clients-list-view .row {
         flex-direction: column;
@@ -870,7 +836,6 @@
 
 /* Screen MD */
 @media (min-width: 768px) {
-
     /* Put a padding for the 2 side of the row in mobile */
     .container .mobile-clients-list-view .row {
         padding: 0 2rem;
@@ -879,7 +844,6 @@
 
 /* Screen 1281px */
 @media (min-width: 1281px) {
-
     /* Put a padding for the left side of the row in mobile */
     .container .mobile-clients-list-view {
         padding-left: 6rem;
@@ -888,7 +852,6 @@
 
 /* Screen 1401px */
 @media (min-width: 1401px) {
-
     /* Center the clients-list-view block */
     .container .clients-list-view {
         /* padding-left: 40rem; */
@@ -911,7 +874,6 @@
 
 /* Screen 1440px */
 @media (min-width: 1440px) {
-
     /* Size of the table.table-list-users */
     .container .clients-list-view .row .col-md-6 table.table-list-users {
         width: 96rem !important;
@@ -920,7 +882,6 @@
 
 /* Screen 1680px */
 @media (min-width: 1680px) {
-
     /* Size of the table.table-list-users */
     .container .clients-list-view .row .col-md-6 table.table-list-users {
         width: 120rem !important;
@@ -929,7 +890,6 @@
 
 /* Screen 1920px */
 @media (min-width: 1920px) {
-
     /* Size of the table.table-list-users */
     .container .clients-list-view .row .col-md-6 table.table-list-users {
         width: 144rem !important;
@@ -938,7 +898,6 @@
 
 /* Screen 2560px */
 @media (min-width: 2560px) {
-
     /* Size of the table.table-list-users */
     .container .clients-list-view .row .col-md-6 table.table-list-users {
         margin-right: 6rem;
@@ -956,7 +915,6 @@
 /* Start responsive Page User admin */
 /* Screen S */
 @media (min-width: 320px) {
-
     /* Center the header */
     .site-header .site-header__wrapper {
         display: flex;
@@ -986,14 +944,17 @@
 }
 
 /* Screen SM */
-@media (min-width: 425px) {}
+@media (min-width: 425px) {
+
+}
 
 /* Screen SM */
-@media (min-width: 568px) {}
+@media (min-width: 568px) {
+    
+}
 
 /* Screen 640 */
 @media (min-width: 640px) {
-
     /* Center the title row */
     .container .row .column.column-60 {
         flex: 1 1 auto;
@@ -1003,7 +964,6 @@
 
 /* Screen MD */
 @media (min-width: 768px) {
-
     /* Center the table-list-users */
     .container table.table-list-users {
         padding: 0 1rem;
@@ -1012,7 +972,6 @@
 
 /* Screen 1281px */
 @media (min-width: 1281px) {
-
     /* Center the table-list-users */
     .container table.table-list-users {
         display: table;
@@ -1023,7 +982,6 @@
 
 /* Screen 1401px */
 @media (min-width: 1401px) {
-
     /* Center the clients-list-view block */
     .container .clients-list-view {
         /* padding-left: 40rem; */
@@ -1046,7 +1004,6 @@
 
 /* Screen 1440px */
 @media (min-width: 1440px) {
-
     /* Size of the table.table-list-users */
     .container .clients-list-view .row .col-md-6 table.table-list-users {
         width: 96rem !important;
@@ -1055,7 +1012,6 @@
 
 /* Screen 1680px */
 @media (min-width: 1680px) {
-
     /* Size of the table.table-list-users */
     .container .clients-list-view .row .col-md-6 table.table-list-users {
         width: 120rem !important;
@@ -1064,7 +1020,6 @@
 
 /* Screen 1920px */
 @media (min-width: 1920px) {
-
     /* Size of the table.table-list-users */
     .container .clients-list-view .row .col-md-6 table.table-list-users {
         width: 140rem !important;
@@ -1073,7 +1028,6 @@
 
 /* Screen 2560px */
 @media (min-width: 2560px) {
-
     /* Size of the table.table-list-users */
     .container .clients-list-view .row .col-md-6 table.table-list-users {
         margin-right: 6rem;
@@ -1091,15 +1045,13 @@
 .table-excel td {
     border: 1px solid #ddd;
     padding: 8px;
-    /* max-width: 150px; */
-    /*Max-size of all the 'table-excel' to regul it individually - Ravo*/
+    /* max-width: 150px; */ /*Max-size of all the 'table-excel' to regul it individually - Ravo*/
     /* Taille maximale des cellules */
     overflow: visible;
     /* Empêche le contenu de déborder */
     text-overflow: ellipsis;
     /* Affiche "..." pour le contenu qui dépasse */
-    /* white-space: nowrap; */
-    /* Revoye à la ligne le texte - Ravo */
+    /* white-space: nowrap; */ /* Revoye à la ligne le texte - Ravo */
     /* Empêche le contenu de se renvoyer à la ligne */
     word-wrap: break-word;
 }
@@ -1113,7 +1065,7 @@
 /* Style des cellules de données avec un fond coloré */
 .table-excel td.highlight {
     background-color: #ffffcc;
-
+   
 }
 
 
@@ -1122,12 +1074,12 @@
     display: flex;
     flex-direction: row;
     background-color: #f0f0f0;
-    /* Couleur de fond */
+        /* Couleur de fond */
     padding: 10px;
-    /* Espacement intérieur */
+        /* Espacement intérieur */
     margin-bottom: 20px;
     margin-top: 20px;
-    /* Marge inférieure */
+        /* Marge inférieure */
 }
 
 #info-saisie p {
@@ -1152,11 +1104,11 @@
     padding: 15px 20px;
     background-color: #f2f2f2;
     height: 80px;
-    /* Ajuster la hauteur du navbar */
+        /* Ajuster la hauteur du navbar */
 }
 
 .user-details {
-    /*  text-align: left; */
+  /*  text-align: left; */
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -1182,7 +1134,7 @@
 
 .normal-size {
     font-size: 5px;
-    /* Taille de police typique pour un paragraphe */
+        /* Taille de police typique pour un paragraphe */
 }
 
 
@@ -1193,13 +1145,13 @@
     font-family: Arial, sans-serif;
     /* Style de police identique */
     font-weight: 500;
-    /* Par exemple, une épaisseur de police moyenne */
+        /* Par exemple, une épaisseur de police moyenne */
 }
 
 .buttons {
     display: flex;
     align-items: center;
-
+  
 }
 
 .buttons a {
